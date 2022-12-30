@@ -8,3 +8,30 @@ body,
   width: 100%;
   font-family: "Rubik", sans-serif;
 }
+a:-webkit-any-link {
+  text-decoration: none !important;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  position: absolute;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 0.75rem;
+  padding: 10px;
+  height: 80%;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 0.75rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
