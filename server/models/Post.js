@@ -26,6 +26,9 @@ const PostSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
+    communityId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
