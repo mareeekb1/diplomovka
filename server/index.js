@@ -7,6 +7,7 @@ import multer from "multer";
 import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
+import { v4 as uuidv4 } from "uuid";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
@@ -35,7 +36,7 @@ const storage = multer.diskStorage({
     cb(null, "public/assets");
   },
   filename(req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, file.originalname + uuidv4());
   },
 });
 const upload = multer({ storage });
