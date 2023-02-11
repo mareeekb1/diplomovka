@@ -15,42 +15,40 @@ import React from "react";
 
 const dummyMessages = [
   {
-    id: "63ae27f61da0c1faf0489131",
+    id: "63e7a506ba14d1ed961373ba",
     firstName: "Marek",
     lastName: "Belej",
-    content:
-      "Ahoj Ninka, dufam ze prides co skoro z prace a konecne si oddychnes",
+    content: "text",
   },
   {
     id: "63ae27f61da0c1faf04891ss",
-    firstName: "Ninka",
-    lastName: "Hornakova",
-    content: "Ahoj, uz pomaly budem koncit.",
+    firstName: "John",
+    lastName: "Doe",
+    content: "text",
   },
   {
-    id: "63ae27f61da0c1faf0489131",
+    id: "63e7a506ba14d1ed961373ba",
     firstName: "Marek",
     lastName: "Belej",
-    content:
-      "Bol to pre teba velmi dlhy den a po tych troch dnoch velmi namahavy",
+    content: "text",
   },
   {
     id: "63ae27f61da0c1faf04891ss",
-    firstName: "Ninka",
-    lastName: "Hornakova",
-    content: "Ano, uz som rada ze budem mat volno",
+    firstName: "John",
+    lastName: "Doe",
+    content: "text",
   },
   {
-    id: "63ae27f61da0c1faf0489131",
+    id: "63e7a506ba14d1ed961373ba",
     firstName: "Marek",
     lastName: "Belej",
-    content: "Lubim ta",
+    content: "text",
   },
   {
     id: "63ae27f61da0c1faf04891ss",
-    firstName: "Ninka",
-    lastName: "Hornakova",
-    content: "Aj ja teba ♥",
+    firstName: "John",
+    lastName: "Doe",
+    content: "text",
   },
 ];
 
