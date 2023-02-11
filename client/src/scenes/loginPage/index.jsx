@@ -22,10 +22,11 @@ const LoginPage = () => {
         p="2rem"
         m="2rem auto"
         borderRadius="1.5rem"
+        sx={{ boxShadow: "4px 4px 10px -8px black" }}
         backgroundColor={theme.palette.background.alt}
       >
         <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
-          Welcome to Socipedia, the Social Media for Sociopaths!
+          Welcome to Expert, the Social Media for profesionals!
         </Typography>
         <Form />
       </Box>

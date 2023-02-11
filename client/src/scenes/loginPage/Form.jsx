@@ -23,11 +23,11 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  picture: yup.string().notRequired(""),
 });
 
 const loginSchema = yup.object().shape({
-  email: yup.string().email("invalid email").required("required"),
+  email: yup.string().email("Invalid email").required("required"),
   password: yup.string().required("required"),
 });
 
@@ -55,13 +55,16 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  //TO CHANGE - ROUTING
   const register = async (values, onSubmitProps) => {
     // this allows us to send form info with image
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
-    formData.append("picturePath", values.picture.name);
+    if (values.picture) {
+      formData.append("picturePath", values.picture.name);
+    }
 
     const savedUserResponse = await fetch(
       "http://localhost:3001/auth/register",
