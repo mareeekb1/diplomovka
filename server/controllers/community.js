@@ -1,5 +1,7 @@
+import mongoose from "mongoose";
 import Community from "../models/Community.js";
 import User from "../models/User.js";
+import { convertObjectIdToString } from "../utils/utils.js";
 
 /* CREATE */
 export const createCommunity = async (req, res) => {
@@ -23,7 +25,11 @@ export const createCommunity = async (req, res) => {
 
 export const getCommunities = async (req, res) => {
   try {
-    const community = await Community.find();
+    const { categoryId } = req.body;
+    let community;
+    if (categoryId) community = await Community.find({ categoryId });
+    if (!categoryId) community = await Community.find();
+
     res.status(200).json(community);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -39,7 +45,18 @@ export const userJoinCommunity = async (req, res) => {
     const user = await User.findById(userId);
     const { firstName, lastName, _id, picturePath } = user;
     const community = await Community.findById(id);
-    community.users.push({ firstName, lastName, _id, picturePath });
+
+    const isParticipant = community.users.find(
+      ({ _id }) => convertObjectIdToString(_id) === userId
+    );
+
+    if (Boolean(isParticipant)) {
+      community.users = community.users.filter(
+        ({ _id }) => convertObjectIdToString(_id) !== userId
+      );
+    } else {
+      community.users.push({ firstName, lastName, _id, picturePath });
+    }
     community.save();
     res.status(200).json(community);
   } catch (err) {

@@ -14,9 +14,16 @@ const CommunitySchema = mongoose.Schema(
       type: Array,
       default: [],
     },
+    messages: {
+      type: Array,
+      default: [],
+    },
     users: {
       type: Array,
       default: [],
+    },
+    owner: {
+      type: String,
     },
   },
   { timestamps: true }

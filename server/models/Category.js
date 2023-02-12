@@ -12,5 +12,5 @@ const CategorySchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-const Community = mongoose.model("Community", CategorySchema);
-export default Community;
+const Category = mongoose.model("Category", CategorySchema);
+export default Category;

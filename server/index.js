@@ -13,15 +13,18 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
 import communityRoutes from "./routes/communities.js";
+import categoryRoutes from "./routes/category.js";
 import { createPost } from "./controllers/posts.js";
 import { register } from "./controllers/auth.js";
 import { verifyToken } from "./middleware/auth.js";
+// import socketio from "socket.io";
 
 /* CONFIGURATION */
 const __fileName = fileURLToPath(import.meta.url);
 const __dirName = path.dirname(__fileName);
 dotenv.config();
 const app = express();
+
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
@@ -65,16 +68,22 @@ app.post("/posts", verifyToken, upload.single("picture"), createPost);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
-app.use("/communities", communityRoutes);
+app.use("/community", communityRoutes);
+app.use("/category", categoryRoutes);
+
+/* SOCKET SEVER */
+// const server = app.listen(process.env.PORT || 6001);
+// const io = socketio(server);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
+mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server port ${PORT}`));
+    app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
   })
   .catch((error) => console.log(`${error} did not connect`));
