@@ -9,11 +9,14 @@ import morgan from "morgan";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { fileURLToPath } from "url";
+//IMPORT ROUTES----------------
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
 import communityRoutes from "./routes/communities.js";
 import categoryRoutes from "./routes/category.js";
+import messageRoutes from "./routes/message.js";
+//-----------------------------
 import { createPost } from "./controllers/posts.js";
 import { register } from "./controllers/auth.js";
 import { verifyToken } from "./middleware/auth.js";
@@ -70,6 +73,7 @@ app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/community", communityRoutes);
 app.use("/category", categoryRoutes);
+app.use("/message", messageRoutes);
 
 /* SOCKET SEVER */
 // const server = app.listen(process.env.PORT || 6001);

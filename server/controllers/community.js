@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Community from "../models/Community.js";
 import User from "../models/User.js";
 import { convertObjectIdToString } from "../utils/utils.js";
