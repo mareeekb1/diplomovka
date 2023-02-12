@@ -6,7 +6,7 @@ import PostWidget from "./PostWidget";
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
-  const token = useSelector((state) => state.token);
+  const token = localStorage.getItem("accessToken");
 
   const getPosts = async () => {
     const response = await fetch("http://localhost:3001/posts", {

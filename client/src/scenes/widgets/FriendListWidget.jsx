@@ -8,7 +8,7 @@ import { setFriends } from "state";
 const FriendListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
-  const token = useSelector((state) => state.token);
+  const token = localStorage.getItem("accessToken");
   const friends = useSelector((state) => state.user.friends);
 
   const getFriends = async () => {
