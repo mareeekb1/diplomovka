@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -9,10 +9,11 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
+  Tooltip,
+  Divider,
 } from "@mui/material";
 import {
-  Search,
-  Message,
+  Public as PublicIcon,
   DarkMode,
   LightMode,
   Notifications,
@@ -22,9 +23,12 @@ import {
   Home,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { setMode, setLogout } from "state";
+import { setMode, setLogout, setCommunitiesFromApi } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import { getRequest } from "api";
+import { api } from "api/routes";
+import Icon from "components/Icon";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -41,6 +45,54 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
+  const userId = useSelector((state) => state.user._id);
+  const myCommunities = useSelector((state) => state.myCommunities);
+
+  useEffect(() => {
+    async function fetchData() {
+      const request = await getRequest(api.community.getByUserId(userId));
+      if (request) {
+        dispatch(setCommunitiesFromApi(request));
+      }
+    }
+    fetchData();
+  }, [dispatch, userId]);
+
+  function shortenName(name) {
+    let workingName = name.split(" ");
+    if (workingName.length < 2) return name;
+    let newName = [];
+    workingName.forEach((item) => {
+      newName.push(item[0]);
+    });
+    return newName.join("");
+  }
+
+  function renderComminityTags() {
+    return myCommunities.slice(0, 10).map((item, key) => {
+      const { name, icon, _id } = item;
+      const fullItemName = name;
+      let newName = name;
+      if (name.length > 10) newName = shortenName(name);
+      return (
+        <Tooltip title={fullItemName} key={key}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
+          >
+            <IconButton onClick={() => navigate("/community/" + _id)}>
+              <Icon name={icon} sx={{ fontSize: "25px" }} />
+            </IconButton>
+            <Typography>{newName}</Typography>
+          </Box>
+        </Tooltip>
+      );
+    });
+  }
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -60,39 +112,47 @@ const Navbar = () => {
         >
           Expert
         </Typography>
-        {isNonMobileScreens && (
-          <FlexBetween
-            backgroundColor={neutralLight}
-            borderRadius="9px"
-            gap="3rem"
-            padding="0.1rem 1.5rem"
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
-        )}
       </FlexBetween>
 
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
-        <FlexBetween gap="2rem">
-          <IconButton onClick={() => dispatch(setMode())}>
-            {theme.palette.mode === "dark" ? (
-              <DarkMode sx={{ fontSize: "25px" }} />
-            ) : (
-              <LightMode sx={{ color: dark, fontSize: "25px" }} />
+        <>
+          <Box sx={{ display: "flex", gap: "1rem" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <IconButton onClick={() => navigate("/home")}>
+                <Home sx={{ fontSize: "25px" }} />
+              </IconButton>
+              <Typography>Home</Typography>
+            </Box>
+            <Tooltip title={"Discover communities"}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <IconButton onClick={() => navigate("/community")}>
+                  <PublicIcon sx={{ fontSize: "25px" }} />
+                </IconButton>
+                <Typography>Discover</Typography>
+              </Box>
+            </Tooltip>
+            {myCommunities && (
+              <>
+                <Divider orientation="vertical" sx={{ height: "auto" }} />
+                {renderComminityTags()}
+              </>
             )}
-          </IconButton>
-          <IconButton onClick={() => navigate("/home")}>
-            <Home sx={{ fontSize: "25px" }} />
-          </IconButton>
-          <IconButton onClick={() => navigate("/community")}>
-            <Message sx={{ fontSize: "25px" }} />
-          </IconButton>
-          <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
+          </Box>
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
@@ -114,10 +174,21 @@ const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
+              <MenuItem
+                value={"Switch modes"}
+                onClick={() => dispatch(setMode())}
+              >
+                {theme.palette.mode === "dark" ? (
+                  <DarkMode sx={{ fontSize: "16px" }} />
+                ) : (
+                  <LightMode sx={{ color: dark, fontSize: "16px" }} />
+                )}
+                <Typography ml={"4px"}>Switch modes</Typography>
+              </MenuItem>
               <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
             </Select>
           </FormControl>
-        </FlexBetween>
+        </>
       ) : (
         <IconButton
           onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
@@ -169,7 +240,7 @@ const Navbar = () => {
               <Home sx={{ fontSize: "25px" }} />
             </IconButton>
             <IconButton onClick={() => navigate("/community")}>
-              <Message sx={{ fontSize: "25px" }} />
+              <PublicIcon sx={{ fontSize: "25px" }} />
             </IconButton>
             <Notifications sx={{ fontSize: "25px" }} />
             <Help sx={{ fontSize: "25px" }} />
@@ -191,6 +262,17 @@ const Navbar = () => {
                 }}
                 input={<InputBase />}
               >
+                <MenuItem
+                  value={"Switch modes"}
+                  onClick={() => dispatch(setMode())}
+                >
+                  {theme.palette.mode === "dark" ? (
+                    <DarkMode sx={{ fontSize: "16px" }} />
+                  ) : (
+                    <LightMode sx={{ color: dark, fontSize: "16px" }} />
+                  )}
+                  <Typography ml={"4px"}>Switch modes</Typography>
+                </MenuItem>
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>

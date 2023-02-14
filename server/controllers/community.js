@@ -5,16 +5,15 @@ import { convertObjectIdToString } from "../utils/utils.js";
 /* CREATE */
 export const createCommunity = async (req, res) => {
   try {
-    const { name, categoryId } = req.body;
+    const { name, categoryId, icon, owner } = req.body;
     const newCommunity = new Community({
       name,
       categoryId,
-      posts: [],
-      users: [],
+      icon,
+      owner,
     });
     await newCommunity.save();
-    const community = await Community.find();
-    res.status(201).json(community);
+    res.status(201).json(newCommunity);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }
@@ -22,12 +21,35 @@ export const createCommunity = async (req, res) => {
 
 /* READ */
 
+export const getUserCommunities = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const community = await Community.find();
+    const filteredCommunities = community.filter((item) => {
+      let found = false;
+      item.users.forEach((user) => {
+        if (convertObjectIdToString(user._id) === userId) {
+          found = true;
+        }
+      });
+      return found;
+    });
+
+    res.status(200).json(filteredCommunities);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
 export const getCommunities = async (req, res) => {
   try {
-    const { categoryId } = req.body;
+    const { categoryId } = req.params;
     let community;
-    if (categoryId) community = await Community.find({ categoryId });
-    if (!categoryId) community = await Community.find();
+    if (!categoryId || categoryId === "categoryId" || categoryId === " ") {
+      community = await Community.find();
+    } else {
+      if (categoryId) community = await Community.find({ categoryId });
+    }
 
     res.status(200).json(community);
   } catch (err) {
@@ -41,6 +63,7 @@ export const userJoinCommunity = async (req, res) => {
   try {
     const { id } = req.params;
     const { userId } = req.body;
+
     const user = await User.findById(userId);
     const { firstName, lastName, _id, picturePath } = user;
     const community = await Community.findById(id);

@@ -20,7 +20,7 @@ a:-webkit-any-link {
 /* Track */
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 0.75rem;
+  border-radius: 0.4rem;
   padding: 10px;
   height: 80%;
 }
@@ -28,10 +28,15 @@ a:-webkit-any-link {
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
-  border-radius: 0.75rem;
+  border-radius: 0.4rem;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+.MuiSelect-select.MuiSelect-standard.MuiInputBase-input.MuiInput-input.css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input {
+  display: flex;
+  justify-content: space-between;
+  margin: "0 10px";
 }

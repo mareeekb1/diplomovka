@@ -27,6 +27,7 @@ const Participants = () => {
       <List>
         {dummyParticipants.map(({ firstName, lastName, imagePath }, key) => (
           <ListItem
+            key={key}
             sx={{
               "&:hover": {
                 color: palette.primary.main,

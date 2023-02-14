@@ -4,6 +4,8 @@ const initialState = {
   mode: "light",
   user: null,
   posts: [],
+  myCommunities: [],
+  allCommunities: [],
 };
 
 export const authSlice = createSlice({
@@ -15,11 +17,11 @@ export const authSlice = createSlice({
     },
     setLogin: (state, action) => {
       state.user = action.payload.user;
-      window.localStorage.setItem("accessToken", action.payload.token);
+      localStorage.setItem("accessToken", action.payload.token);
     },
     setLogout: (state) => {
       state.user = null;
-      window.localStorage.setItem("accessToken", null);
+      localStorage.setItem("accessToken", null);
     },
     setFriends: (state, action) => {
       if (state.user) {
@@ -38,8 +40,35 @@ export const authSlice = createSlice({
       });
       state.posts = updatedPosts;
     },
+    setCommunities: (state, action) => {
+      if (action.payload.type === "join")
+        state.myCommunities.push(action.payload.community);
+      if (action.payload.type === "leave")
+        state.myCommunities = state.myCommunities.filter(
+          (item) => item._id !== action.payload.community._id
+        );
+    },
+    setCommunitiesFromApi: (state, action) => {
+      state.myCommunities = action.payload;
+    },
+    setAllCommunities: (state, action) => {
+      state.allCommunities = action.payload;
+    },
+    createCommunity: (state, action) => {
+      state.allCommunities.push(action.payload);
+    },
   },
 });
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost } =
-  authSlice.actions;
+export const {
+  setMode,
+  setLogin,
+  setLogout,
+  setFriends,
+  setPosts,
+  setPost,
+  setCommunities,
+  setCommunitiesFromApi,
+  setAllCommunities,
+  createCommunity,
+} = authSlice.actions;
 export default authSlice.reducer;

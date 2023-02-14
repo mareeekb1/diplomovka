@@ -2,15 +2,13 @@ import axios from "axios";
 
 const token = localStorage.getItem("accessToken");
 
-export function getRequest(url, body) {
+export function getRequest(url) {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await axios.get(url, {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
+          Authorization: `Bearer ${token}`,
         },
-        body,
       });
       resolve(response.data);
     } catch (error) {
@@ -22,14 +20,12 @@ export function getRequest(url, body) {
 export function postRequest(url, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await axios.post(url, {
+      const response = await axios.post(url, body, {
         headers: {
-          "Content-Type": "application/json",
           Authorization: "Bearer " + token,
         },
-        body,
       });
-      resolve(response);
+      resolve(response.data);
     } catch (error) {
       reject(error);
     }
@@ -38,14 +34,12 @@ export function postRequest(url, body) {
 export function deleteRequest(url, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await axios.delete(url, {
+      const response = await axios.delete(url, body, {
         headers: {
-          "Content-Type": "application/json",
           Authorization: "Bearer " + token,
         },
-        body,
       });
-      resolve(response);
+      resolve(response.data);
     } catch (error) {
       reject(error);
     }
@@ -54,13 +48,12 @@ export function deleteRequest(url, body) {
 export function patchRequest(url, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await axios.patch(url, {
+      const response = await axios.patch(url, body, {
         headers: {
           Authorization: "Bearer " + token,
         },
-        body,
       });
-      resolve(response);
+      resolve(response.data);
     } catch (error) {
       reject(error);
     }

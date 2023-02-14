@@ -10,6 +10,7 @@ const router = express.Router();
 
 /* READ*/
 router.get("/", verifyToken, getCategories);
+router.get("/:categoryId", verifyToken, getCategories);
 
 /* UPDATE */
 router.post("/create", verifyToken, createCategory);
