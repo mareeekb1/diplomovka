@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 import { getRequest } from "api";
 import { api } from "api/routes";
 import { setAllCommunities } from "state";
+import Participants from "scenes/widgets/community/Participants";
+import CommunityPosts from "scenes/widgets/community/CommunityPosts";
 
 const ComunityPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -32,28 +34,55 @@ const ComunityPage = () => {
         gap="0.5rem"
         justifyContent="space-between"
       >
-        {isNonMobileScreens ? (
+        {!communityId ? (
           <>
-            <Box flexBasis={"20%"}>
-              <CreateCommunity />
-            </Box>
-            <Box
-              flexBasis={isNonMobileScreens ? "48%" : undefined}
-              mt={isNonMobileScreens ? undefined : "2rem"}
-            >
-              {communityId ? <CommunityContainer /> : <CommunityDiscover />}
-            </Box>
-            <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-              <CommunityList />
-            </Box>
+            {isNonMobileScreens ? (
+              <>
+                <Box flexBasis={"20%"}>
+                  <CreateCommunity />
+                </Box>
+                <Box
+                  flexBasis={isNonMobileScreens ? "48%" : undefined}
+                  mt={isNonMobileScreens ? undefined : "2rem"}
+                >
+                  {communityId ? <CommunityContainer /> : <CommunityDiscover />}
+                </Box>
+                <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+                  <CommunityList />
+                </Box>
+              </>
+            ) : (
+              <Box
+                flexBasis={isNonMobileScreens ? "48%" : undefined}
+                mt={isNonMobileScreens ? undefined : "2rem"}
+              >
+                <CommunityDiscover />
+              </Box>
+            )}
           </>
         ) : (
-          <Box
-            flexBasis={isNonMobileScreens ? "48%" : undefined}
-            mt={isNonMobileScreens ? undefined : "2rem"}
-          >
-            <CommunityContainer />
-          </Box>
+          <>
+            {isNonMobileScreens ? (
+              <>
+                <Box
+                  flexBasis={isNonMobileScreens ? "48%" : undefined}
+                  mt={isNonMobileScreens ? undefined : "2rem"}
+                >
+                  <CommunityPosts />
+                </Box>
+                <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+                  <Participants />
+                </Box>
+              </>
+            ) : (
+              <Box
+                flexBasis={isNonMobileScreens ? "48%" : undefined}
+                mt={isNonMobileScreens ? undefined : "2rem"}
+              >
+                <CommunityContainer />
+              </Box>
+            )}
+          </>
         )}
       </Box>
     </Box>

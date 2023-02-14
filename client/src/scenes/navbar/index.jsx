@@ -24,7 +24,7 @@ import {
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout, setCommunitiesFromApi } from "state";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import { getRequest } from "api";
 import { api } from "api/routes";
@@ -36,6 +36,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const params = useParams();
+  const location = useLocation();
+  const pathname = location.pathname.slice(1, location.pathname.length);
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -43,10 +46,43 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
+  const main = theme.palette.neutral.main;
+  const primary = theme.palette.primary.main;
 
   const fullName = `${user.firstName} ${user.lastName}`;
   const userId = useSelector((state) => state.user._id);
   const myCommunities = useSelector((state) => state.myCommunities);
+
+  const isHome = pathname === "home";
+  const isCommunity = pathname === "community";
+
+  function NavigationBadge(props) {
+    const { item, link } = props;
+    const { name, icon, _id } = item;
+    const fullItemName = name;
+    const isInParams = params.communityId === _id;
+    const color = isInParams ? primary : main;
+    let newName = name;
+    if (name.length > 10) newName = shortenName(name);
+    return (
+      <Tooltip title={fullItemName}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            borderBottom: isInParams ? `2px solid ${primary}` : "",
+          }}
+        >
+          <IconButton onClick={() => navigate(link)}>
+            <Icon name={icon} sx={{ fontSize: "25px", color: color }} />
+          </IconButton>
+          <Typography sx={{ color: color }}>{newName}</Typography>
+        </Box>
+      </Tooltip>
+    );
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -70,26 +106,12 @@ const Navbar = () => {
 
   function renderComminityTags() {
     return myCommunities.slice(0, 10).map((item, key) => {
-      const { name, icon, _id } = item;
-      const fullItemName = name;
-      let newName = name;
-      if (name.length > 10) newName = shortenName(name);
       return (
-        <Tooltip title={fullItemName} key={key}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-            }}
-          >
-            <IconButton onClick={() => navigate("/community/" + _id)}>
-              <Icon name={icon} sx={{ fontSize: "25px" }} />
-            </IconButton>
-            <Typography>{newName}</Typography>
-          </Box>
-        </Tooltip>
+        <NavigationBadge
+          item={item}
+          key={key}
+          link={"/community/" + item._id}
+        />
       );
     });
   }
@@ -124,12 +146,17 @@ const Navbar = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 flexDirection: "column",
+                borderBottom: isHome ? `2px solid ${primary}` : "",
               }}
             >
               <IconButton onClick={() => navigate("/home")}>
-                <Home sx={{ fontSize: "25px" }} />
+                <Home
+                  sx={{ fontSize: "25px", color: isHome ? primary : main }}
+                />
               </IconButton>
-              <Typography>Home</Typography>
+              <Typography sx={{ color: isHome ? primary : main }}>
+                Home
+              </Typography>
             </Box>
             <Tooltip title={"Discover communities"}>
               <Box
@@ -138,12 +165,20 @@ const Navbar = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   flexDirection: "column",
+                  borderBottom: isCommunity ? `2px solid ${primary}` : "",
                 }}
               >
                 <IconButton onClick={() => navigate("/community")}>
-                  <PublicIcon sx={{ fontSize: "25px" }} />
+                  <PublicIcon
+                    sx={{
+                      fontSize: "25px",
+                      color: isCommunity ? primary : main,
+                    }}
+                  />
                 </IconButton>
-                <Typography>Discover</Typography>
+                <Typography sx={{ color: isCommunity ? primary : main }}>
+                  Discover
+                </Typography>
               </Box>
             </Tooltip>
             {myCommunities && (

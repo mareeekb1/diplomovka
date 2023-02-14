@@ -140,7 +140,7 @@ const CommunityContainer = () => {
                 }}
               >
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Icon name={icon} sx={{ mr: 2 }} />
+                  <Icon name={icon} sx={{ mr: 2, color: main }} />
                   <Box>
                     <Typography color={main}>{name}</Typography>
                     <Typography color={main} fontSize={10}>

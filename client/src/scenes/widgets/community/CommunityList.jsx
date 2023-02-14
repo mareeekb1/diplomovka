@@ -1,6 +1,7 @@
-import { List, ListItem, Typography, useTheme } from "@mui/material";
+import { Box, List, ListItem, Typography, useTheme } from "@mui/material";
 
 import FlexBetween from "components/FlexBetween";
+import Icon from "components/Icon";
 import Loader from "components/Loader";
 import WidgetWrapper from "components/WidgetWrapper";
 import React from "react";
@@ -11,7 +12,6 @@ const CommunityList = () => {
   const { palette } = useTheme();
   const dark = palette.neutral.dark;
   const main = palette.neutral.main;
-  const medium = palette.neutral.mediumMain;
   const darkHover = palette.primary.dark;
   const myCommunities = useSelector((state) => state.myCommunities);
 
@@ -27,7 +27,7 @@ const CommunityList = () => {
         Your communities
       </Typography>
       <List>
-        {myCommunities.map(({ name, category, users, _id }, key) => (
+        {myCommunities.map(({ name, users, _id, icon }, key) => (
           <Link to={"/community/" + _id} key={key}>
             <ListItem>
               <FlexBetween
@@ -41,11 +41,15 @@ const CommunityList = () => {
                   },
                 }}
               >
-                <Typography color={main}>{name}</Typography>
-                <FlexBetween width={"120px"}>
-                  <Typography color={medium}>{category}</Typography>
-                  <Typography color={main}>{users.length}</Typography>
-                </FlexBetween>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Icon name={icon} sx={{ mr: 2, color: main }} />
+                  <Box>
+                    <Typography color={main}>{name}</Typography>
+                    <Typography color={main} fontSize={10}>
+                      Number of members: {users.length}
+                    </Typography>
+                  </Box>
+                </Box>
               </FlexBetween>
             </ListItem>
           </Link>
