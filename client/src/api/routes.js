@@ -7,6 +7,9 @@ export const api = {
   },
   users: {
     getUserById: (id) => `${URL}users/${id}`,
+    getFriendsSuggestions: (userId, communityId) =>
+      `${URL}users/${userId}/${communityId}`,
+    addRemoveFriend: (userId, friendId) => `${URL}users/${userId}/${friendId}`,
   },
   posts: {
     patchLike: (id) => `${URL}posts/${id}/like`,

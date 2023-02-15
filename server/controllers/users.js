@@ -1,4 +1,6 @@
 import User from "../models/User.js";
+import Community from "../models/Community.js";
+import { convertObjectIdToString } from "../utils/utils.js";
 
 /* READ */
 
@@ -26,6 +28,50 @@ export const getUserFriends = async (req, res) => {
       }
     );
     res.status(200).json(formattedFriends);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+export const getFriendsSuggestion = async (req, res) => {
+  try {
+    const { userId, communityId } = req.params;
+    const user = await User.findById(userId);
+    let community = null;
+    if (
+      communityId !== "undefined" &&
+      communityId !== undefined &&
+      communityId
+    ) {
+      community = await Community.findById(communityId);
+    }
+    let friendsSuggestions = [];
+    let usersToSuggest = [];
+    if (!community) {
+      usersToSuggest = await User.find();
+    } else {
+      usersToSuggest = community.users;
+    }
+    friendsSuggestions = usersToSuggest.filter((suggestion) => {
+      let alreadyFriends = false;
+      if (userId === convertObjectIdToString(suggestion._id))
+        alreadyFriends = true;
+      user.friends.forEach((friend) => {
+        if (friend === convertObjectIdToString(suggestion._id))
+          alreadyFriends = true;
+      });
+      return !alreadyFriends;
+    });
+    friendsSuggestions = friendsSuggestions.map((item) => {
+      const numberOfMutualFriends = item.friends.filter((mutualFriend) =>
+        user.friends.includes(mutualFriend)
+      );
+      let newItem;
+      if (community) newItem = item;
+      if (!community) newItem = item._doc;
+      return { mutualFriends: numberOfMutualFriends, ...newItem };
+    });
+
+    res.status(200).json(friendsSuggestions);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

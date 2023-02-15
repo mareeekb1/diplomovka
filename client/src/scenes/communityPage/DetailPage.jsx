@@ -9,12 +9,14 @@ import { useParams } from "react-router-dom";
 import CommunityContainer from "scenes/widgets/community/CommunityContainer";
 import CommunityPosts from "scenes/widgets/community/CommunityPosts";
 import Participants from "scenes/widgets/community/Participants";
+import FriendsSuggestions from "scenes/widgets/general/FriendsSuggestions";
 import { setCommunityDetail } from "state";
 
 function DetailPage() {
   const { communityId } = useParams();
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const community = useSelector((state) => state.community);
+  const userId = useSelector((state) => state.user._id);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -54,6 +56,7 @@ function DetailPage() {
           </Box>
           <Box flexBasis={isNonMobileScreens ? "24%" : undefined}>
             <Participants users={community ? community.users : []} />
+            <FriendsSuggestions userId={userId} communityId={community._id} />
           </Box>
         </>
       ) : (

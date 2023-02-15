@@ -16,7 +16,7 @@ export const register = async (req, res) => {
       lastName,
       email,
       password: passwordHash,
-      picturePath: req.file.filename,
+      picturePath: req.file?.filename,
       location,
       occupation,
       viewedProfile: 0,
