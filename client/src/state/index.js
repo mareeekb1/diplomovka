@@ -4,6 +4,7 @@ const initialState = {
   mode: "light",
   user: null,
   posts: [],
+  community: null,
   myCommunities: [],
   allCommunities: [],
 };
@@ -57,6 +58,9 @@ export const authSlice = createSlice({
     createCommunity: (state, action) => {
       state.allCommunities.push(action.payload);
     },
+    setCommunityDetail: (state, action) => {
+      state.community = action.payload;
+    },
   },
 });
 export const {
@@ -70,5 +74,6 @@ export const {
   setCommunitiesFromApi,
   setAllCommunities,
   createCommunity,
+  setCommunityDetail,
 } = authSlice.actions;
 export default authSlice.reducer;

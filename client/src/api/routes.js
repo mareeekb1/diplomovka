@@ -15,6 +15,7 @@ export const api = {
   community: {
     default: URL + "community",
     getByCategoryId: (id) => `${URL}community/${id}`,
+    getByCommunityId: (id) => `${URL}community/${id}/detail`,
     joinCommunity: (id) => `${URL}community/${id}/join`,
     getByUserId: (id) => `${URL}community/${id}/user`,
     create: URL + "community/create",

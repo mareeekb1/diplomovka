@@ -6,11 +6,13 @@ import { convertObjectIdToString } from "../utils/utils.js";
 export const createCommunity = async (req, res) => {
   try {
     const { name, categoryId, icon, owner } = req.body;
+    const user = await User.findById(owner);
     const newCommunity = new Community({
       name,
       categoryId,
       icon,
       owner,
+      users: [user],
     });
     await newCommunity.save();
     res.status(201).json(newCommunity);
@@ -56,6 +58,16 @@ export const getCommunities = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+export const getCommunityById = async (req, res) => {
+  try {
+    const { communityId } = req.params;
+    const community = await Community.findById(communityId);
+
+    res.status(200).json(community);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
 
 /* UPDATE */
 
@@ -65,7 +77,6 @@ export const userJoinCommunity = async (req, res) => {
     const { userId } = req.body;
 
     const user = await User.findById(userId);
-    const { firstName, lastName, _id, picturePath } = user;
     const community = await Community.findById(id);
 
     const isParticipant = community.users.find(
@@ -77,7 +88,7 @@ export const userJoinCommunity = async (req, res) => {
         ({ _id }) => convertObjectIdToString(_id) !== userId
       );
     } else {
-      community.users.push({ firstName, lastName, _id, picturePath });
+      community.users.push(user);
     }
     community.save();
     res.status(200).json(community);

@@ -1,6 +1,7 @@
 import {
   Button,
   FormControl,
+  InputLabel,
   TextField,
   Typography,
   useTheme,
@@ -11,6 +12,7 @@ import CategorySelector from "components/CategorySelector";
 import WidgetWrapper from "components/WidgetWrapper";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { createCommunity as createCommunityAction } from "state";
 
 const CreateCommunity = () => {
@@ -20,15 +22,16 @@ const CreateCommunity = () => {
   const [newName, setNewName] = useState("");
   const dispatch = useDispatch();
   const dark = palette.neutral.dark;
+  const navigate = useNavigate();
 
   async function createCommunity() {
     const state = { name: newName, owner: user._id, ...category };
     const request = await postRequest(api.community.create, state);
-    console.log(request);
     if (request) {
       dispatch(createCommunityAction(request));
       setCategory({ categoryId: "", icon: "" });
       setNewName("");
+      navigate(request._id);
     }
   }
   return (
@@ -47,7 +50,9 @@ const CreateCommunity = () => {
         onChange={(e) => setNewName(e.target.value)}
         value={newName}
       >
-        <TextField variant="standard" sx={{ my: "16px" }} label="Name" />
+        {!newName && <InputLabel>Name</InputLabel>}
+
+        <TextField variant="standard" sx={{ my: "16px", ml: "8px" }} />
       </FormControl>
       <CategorySelector
         value={`${category.categoryId}${category.icon ? " " : ""}${
@@ -59,7 +64,7 @@ const CreateCommunity = () => {
       <Button
         variant="contained"
         sx={{ mt: "16px" }}
-        disabled={!category || !newName}
+        disabled={!category.categoryId || !newName}
         onClick={createCommunity}
       >
         Create community

@@ -48,7 +48,7 @@ const PostWidget = ({
   };
 
   return (
-    <WidgetWrapper m="2rem 0">
+    <WidgetWrapper mt="4px">
       <Friend
         friendId={postUserId}
         name={name}

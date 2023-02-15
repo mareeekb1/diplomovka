@@ -15,11 +15,11 @@ const CommunityPosts = () => {
       gap="0.5rem"
       justifyContent="space-between"
     >
-      <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+      <Box flexBasis={isNonMobileScreens ? "31%" : undefined}>
         <UserWidget userId={_id} picturePath={picturePath} />
       </Box>
       <Box
-        flexBasis={isNonMobileScreens ? "42%" : undefined}
+        flexBasis={isNonMobileScreens ? "69%" : undefined}
         mt={isNonMobileScreens ? undefined : "2rem"}
       >
         <MyPostWidget picturePath={picturePath} />
