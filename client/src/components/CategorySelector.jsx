@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { getRequest } from "api";
 import { api } from "api/routes";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Icon from "./Icon";
 import { setCategories as setReduxCategories } from '../state'
@@ -29,7 +29,7 @@ const CategorySelector = ({ onSelect, value = "", label }) => {
       }
     }
     fetchData();
-  }, []);
+  }, [dispatch]);
 
   function onSelectWithIcon(event) {
     const value = event.target.value.split(" ");

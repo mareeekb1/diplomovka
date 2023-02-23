@@ -21,6 +21,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
 
   const isFriend = friends.find((friend) => friend._id === friendId);
   const isNotMe = _id !== friendId;
+  const specificId = isNotMe ? friendId : _id
 
   const patchFriend = async () => {
     const response = await fetch(
@@ -40,7 +41,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   return (
     <FlexBetween>
       <FlexBetween gap="1rem">
-        <UserImage image={userPicturePath} size="55px" />
+        <UserImage image={userPicturePath} size="55px" userId={specificId} />
         <Box
           onClick={() => {
             navigate(`/profile/${friendId}`);

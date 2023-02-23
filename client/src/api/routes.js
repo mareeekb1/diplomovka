@@ -7,9 +7,11 @@ export const api = {
   },
   users: {
     getUserById: (id) => `${URL}users/${id}`,
+    getUserImage: (id) => `${URL}users/${id}/picture`,
     getFriendsSuggestions: (userId, communityId) =>
       `${URL}users/${userId}/${communityId}`,
     addRemoveFriend: (userId, friendId) => `${URL}users/${userId}/${friendId}`,
+    editProfile: `${URL}users/edit`,
   },
   posts: {
     patchLike: (id) => `${URL}posts/${id}/like`,

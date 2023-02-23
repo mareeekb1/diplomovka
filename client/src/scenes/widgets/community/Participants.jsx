@@ -11,7 +11,7 @@ const Participants = ({ users }) => {
     <WidgetWrapper maxHeight="40vh" overflow="auto">
       <Typography variant="h4">Participants</Typography>
       <List>
-        {users.map(({ firstName, lastName, picturePath }, key) => (
+        {users.map(({ firstName, lastName, picturePath, _id }, key) => (
           <ListItem
             key={key}
             sx={{
@@ -24,7 +24,7 @@ const Participants = ({ users }) => {
           >
             <Box mr="1rem">
               {picturePath ? (
-                <UserImage image={picturePath} size="24px" />
+                <UserImage image={picturePath} size="24px" userId={_id} />
               ) : (
                 <PersonIcon sx={{ fontSize: "24px" }} />
               )}

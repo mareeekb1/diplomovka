@@ -12,65 +12,80 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getRequest } from "api";
 import { api } from "api/routes";
+import { useSelector } from "react-redux";
+import EditProfile from "scenes/profilePage/EditProfile";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
+  const userRedux = useSelector(state => state.user)
+  const isMyProfile = userId === userRedux._id
   const { palette } = useTheme();
   const navigate = useNavigate();
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
+  const [editProfile, setEditProfile] = useState(false)
 
   useEffect(() => {
+    if (isMyProfile) {
+      setUser(userRedux)
+    }
     const getUser = async () => {
       const response = await getRequest(api.users.getUserById(userId));
       if (response) setUser(response);
     };
     getUser();
-  }, [userId]);
+  }, [userId, isMyProfile, userRedux]);
 
   if (!user) {
     return null;
   }
+
 
   const {
     firstName,
     lastName,
     location,
     occupation,
-    // viewedProfile,
-    // impressions,
-    friends,
+    // friends,
   } = user;
+
 
   return (
     <WidgetWrapper>
+      <EditProfile open={editProfile} handleClose={() => setEditProfile(false)} />
       {/* FIRST ROW */}
       <FlexBetween
         gap="0.5rem"
         pb="1.1rem"
-        onClick={() => navigate(`/profile/${userId}`)}
       >
         <FlexBetween gap="1rem">
-          <UserImage image={picturePath} />
-          <Box>
-            <Typography
-              variant="h4"
-              color={dark}
-              fontWeight="500"
-              sx={{
-                "&:hover": {
-                  color: palette.primary.light,
-                  cursor: "pointer",
-                },
-              }}
-            >
-              {firstName} {lastName}
-            </Typography>
-            <Typography color={medium}>{friends.length} friends</Typography>
-          </Box>
+          <UserImage image={picturePath} userId={userId} />
+          <Typography
+            onClick={() => navigate(`/profile/${userId}`)}
+            variant="h4"
+            color={dark}
+            fontWeight="500"
+            sx={{
+              "&:hover": {
+                color: palette.primary.light,
+                cursor: "pointer",
+              },
+            }}
+          >
+            {firstName} {lastName}
+          </Typography>
         </FlexBetween>
-        <ManageAccountsOutlined />
+        {isMyProfile &&
+          <ManageAccountsOutlined sx={{
+            '&:hover': {
+              cursor: 'pointer',
+              color: medium
+            }
+          }}
+            onClick={() => setEditProfile(true)}
+          />
+        }
       </FlexBetween>
 
       <Divider />

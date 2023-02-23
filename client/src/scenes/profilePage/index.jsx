@@ -1,4 +1,6 @@
 import { Box, useMediaQuery } from "@mui/material";
+import { getRequest } from "api";
+import { api } from "api/routes";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "scenes/navbar";
@@ -10,19 +12,13 @@ import UserWidget from "scenes/widgets/UserWidget";
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
-  const token = localStorage.getItem("accessToken");
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
-  const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    setUser(data);
-  };
-
   useEffect(() => {
+    async function getUser() {
+      const request = await getRequest(api.users.getUserById(userId))
+      setUser(request)
+    }
     getUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

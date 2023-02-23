@@ -19,7 +19,6 @@ export const createPost = async (req, res) => {
       comments: [],
     });
     await newPost.save();
-    console.log(newPost);
     res.status(201).json(newPost);
   } catch (err) {
     res.status(409).json({ message: err.message });
@@ -33,7 +32,7 @@ export const getFeedPosts = async (req, res) => {
     const { userId } = req.params;
     const post = await Post.find();
     const { communities, friends } = await User.findById(userId);
-    console.log(communities, friends, post);
+    // console.log(communities, friends, post);
 
     res.status(200).json(post.reverse());
   } catch (err) {

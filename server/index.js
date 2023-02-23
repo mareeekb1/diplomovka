@@ -20,6 +20,7 @@ import messageRoutes from "./routes/message.js";
 import { createPost } from "./controllers/posts.js";
 import { register } from "./controllers/auth.js";
 import { verifyToken } from "./middleware/auth.js";
+import { editProfile } from "./controllers/users.js";
 // import socketio from "socket.io";
 
 /* CONFIGURATION */
@@ -66,6 +67,7 @@ const upload = multer({
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/users/edit", verifyToken, upload.single("picture"), editProfile);
 
 /* ROUTES */
 app.use("/auth", authRoutes);

@@ -76,6 +76,18 @@ export const getFriendsSuggestion = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+export const getUserImage = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log(req.params);
+    const user = await User.find({ _id: userId });
+    const picturePath = user.picturePath;
+    console.log(picturePath);
+    res.status(200).json(picturePath);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
 
 /* UPDATE */
 
@@ -111,6 +123,22 @@ export const addRemoveFriend = async (req, res) => {
       }
     );
     res.status(200).json(formattedFriends);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const editProfile = async (req, res) => {
+  try {
+    const { occupation, location, userId } = req.body;
+    const picture = req.file?.filename;
+    const user = await User.findById(userId);
+    if (occupation) user.occupation = occupation;
+    if (location) user.location = location;
+    if (picture) user.picturePath = picture;
+    await user.save();
+
+    res.status(200).json(user);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

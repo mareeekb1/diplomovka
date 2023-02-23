@@ -73,7 +73,7 @@ const FriendsSuggestions = ({ userId, communityId }) => {
                   <Box sx={{ display: "flex" }}>
                     <Box mr="1rem">
                       {picturePath ? (
-                        <UserImage image={picturePath} size="20px" />
+                        <UserImage image={picturePath} size="20px" userId={_id} />
                       ) : (
                         <PersonIcon sx={{ fontSize: "20px" }} />
                       )}
