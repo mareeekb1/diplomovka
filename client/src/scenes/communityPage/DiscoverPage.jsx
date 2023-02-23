@@ -7,6 +7,7 @@ import CommunityList from "scenes/widgets/community/CommunityList";
 import CreateCommunity from "scenes/widgets/community/CreateCommunity";
 import CommunityDiscover from "scenes/widgets/community/CommunityDiscover";
 import { setAllCommunities } from "state";
+import CreateCategory from "scenes/widgets/general/CreateCategory";
 
 function DiscoverPage() {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -24,6 +25,7 @@ function DiscoverPage() {
         <>
           <Box flexBasis={"24%"}>
             <CreateCommunity />
+            <CreateCategory />
           </Box>
           <Box
             flexBasis={isNonMobileScreens ? "52%" : undefined}

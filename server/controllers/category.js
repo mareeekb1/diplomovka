@@ -4,6 +4,11 @@ import Category from "../models/Category.js";
 export const createCategory = async (req, res) => {
   try {
     const { name, icon } = req.body;
+    const categories = await Category.find({ name: name });
+    if (categories.length > 0)
+      return res
+        .status(401)
+        .json({ message: "Category with this name already exists." });
     const newCategory = new Category({
       name,
       icon,

@@ -8,15 +8,25 @@ import {
 import { getRequest } from "api";
 import { api } from "api/routes";
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Icon from "./Icon";
+import { setCategories as setReduxCategories } from '../state'
 
 const CategorySelector = ({ onSelect, value = "", label }) => {
-  const [categories, setCategories] = useState([]);
+  const categoriesRedux = useSelector(state => state.categories)
+  const dispatch = useDispatch()
+
+
 
   useEffect(() => {
+
     async function fetchData() {
-      const request = await getRequest(api.category.get);
-      setCategories(request);
+      try {
+        const request = await getRequest(api.category.get);
+        dispatch(setReduxCategories(request))
+      } catch (error) {
+        console.log(error)
+      }
     }
     fetchData();
   }, []);
@@ -26,7 +36,7 @@ const CategorySelector = ({ onSelect, value = "", label }) => {
     onSelect(value[0], value[1]);
   }
 
-  if (!categories) return <TextField select fullWidth />;
+  if (!categoriesRedux) return <TextField select fullWidth />;
   return (
     <FormControl fullWidth>
       {label && <InputLabel>Category</InputLabel>}
@@ -40,7 +50,7 @@ const CategorySelector = ({ onSelect, value = "", label }) => {
         <MenuItem value={""}>
           <em>None</em>
         </MenuItem>
-        {categories.map(({ name, _id, icon }, key) => (
+        {categoriesRedux.map(({ name, _id, icon }, key) => (
           <MenuItem
             value={`${_id} ${icon}`}
             key={key}

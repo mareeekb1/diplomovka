@@ -24,13 +24,17 @@ const FriendsSuggestions = ({ userId, communityId }) => {
   const [added, setAdded] = useState([]);
   const dispatch = useDispatch;
 
-  async function addRemoveFriend(friendId) {
-    const response = await patchRequest(
-      api.users.addRemoveFriend(userId, friendId)
-    );
-    if (response) {
-      dispatch(setFriends({ friends: response }));
-      setAdded(response.map((item) => item._id));
+  async function addFriend(friendId) {
+    try {
+      const response = await patchRequest(
+        api.users.addRemoveFriend(userId, friendId)
+      );
+      if (response) {
+        dispatch(setFriends({ friends: response }));
+        setAdded(response.map((item) => item._id));
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -45,9 +49,8 @@ const FriendsSuggestions = ({ userId, communityId }) => {
   }, [communityId, userId]);
 
   function filterSuggestionsByAdded() {
-    return suggestions.filter((item) => added.includes(item._id));
+    return suggestions.filter((item) => !added.includes(item._id));
   }
-
   if (filterSuggestionsByAdded().length === 0) {
     return <div />;
   }
@@ -91,11 +94,7 @@ const FriendsSuggestions = ({ userId, communityId }) => {
                     </Box>
                   </Box>
                 </FlexBetween>
-                <IconButton
-                  onClick={() => addRemoveFriend(_id)}
-                  sx={{}}
-                  size="small"
-                >
+                <IconButton onClick={() => addFriend(_id)} sx={{}} size="small">
                   <PersonAddOutlined sx={{ color: primaryDark }} size="small" />
                 </IconButton>
               </Box>
