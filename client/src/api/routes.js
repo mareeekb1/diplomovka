@@ -13,7 +13,9 @@ export const api = {
   },
   posts: {
     patchLike: (id) => `${URL}posts/${id}/like`,
-    default: URL + "post",
+    default: (id) => `${URL}posts/${id}`,
+    communityPosts: (id) => `${URL}posts/${id}/comumnityPosts`,
+    userPosts: (id) => `${URL}posts/${id}/userPosts`,
   },
   community: {
     default: URL + "community",

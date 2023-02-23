@@ -14,6 +14,8 @@ export const createCommunity = async (req, res) => {
       owner,
       users: [user],
     });
+    user.communities.push(newCommunity._id);
+    await user.save();
     await newCommunity.save();
     res.status(201).json(newCommunity);
   } catch (err) {
@@ -87,10 +89,15 @@ export const userJoinCommunity = async (req, res) => {
       community.users = community.users.filter(
         ({ _id }) => convertObjectIdToString(_id) !== userId
       );
+      user.communities = user.communities.filter(
+        (item) => convertObjectIdToString(item) !== userId
+      );
     } else {
+      user.communities.push(convertObjectIdToString(community._id));
       community.users.push(user);
     }
-    community.save();
+    await community.save();
+    await user.save();
     res.status(200).json(community);
   } catch (err) {
     res.status(404).json({ message: err.message });

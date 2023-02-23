@@ -5,7 +5,7 @@ import MyPostWidget from "../MyPostWidget";
 import PostsWidget from "../PostsWidget";
 import UserWidget from "../UserWidget";
 
-const CommunityPosts = () => {
+const CommunityPosts = ({ communityId }) => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.user);
   return (
@@ -23,7 +23,7 @@ const CommunityPosts = () => {
         mt={isNonMobileScreens ? undefined : "2rem"}
       >
         <MyPostWidget picturePath={picturePath} />
-        <PostsWidget userId={_id} />
+        <PostsWidget userId={_id} communityId={communityId} />
       </Box>
     </Box>
   );

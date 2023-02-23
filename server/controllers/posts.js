@@ -4,9 +4,10 @@ import User from "../models/User.js";
 /* CREATE */
 export const createPost = async (req, res) => {
   try {
-    const { userId, description, picturePath } = req.body;
+    const { userId, description, picturePath, communityId } = req.body;
     const user = await User.findById(userId);
     const newPost = new Post({
+      communityId: communityId || null,
       userId,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -18,8 +19,8 @@ export const createPost = async (req, res) => {
       comments: [],
     });
     await newPost.save();
-    const post = await Post.find();
-    res.status(201).json(post);
+    console.log(newPost);
+    res.status(201).json(newPost);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }
@@ -29,8 +30,12 @@ export const createPost = async (req, res) => {
 
 export const getFeedPosts = async (req, res) => {
   try {
+    const { userId } = req.params;
     const post = await Post.find();
-    res.status(200).json(post);
+    const { communities, friends } = await User.findById(userId);
+    console.log(communities, friends, post);
+
+    res.status(200).json(post.reverse());
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -40,7 +45,16 @@ export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
     const post = await Post.find({ userId });
-    res.status(200).json(post);
+    res.status(200).json(post.reverse());
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+export const getCommunityPosts = async (req, res) => {
+  try {
+    const { communityId } = req.params;
+    const post = await Post.find({ communityId });
+    res.status(200).json(post.reverse());
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

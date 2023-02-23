@@ -1,33 +1,32 @@
+import { getRequest } from "api";
+import { api } from "api/routes";
+import Loader from "components/Loader";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const PostsWidget = ({ isProfile = false, communityId }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
-  const token = localStorage.getItem("accessToken");
+  const userId = useSelector((state) => state.user._id)
 
-  const getPosts = async () => {
-    const response = await fetch("http://localhost:3001/posts", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
+  async function getPosts() {
+    let url = ''
+    if (communityId) {
+      url = api.posts.communityPosts(communityId)
+    } else {
+      url = api.posts.default(userId)
+    }
+    const request = await getRequest(url)
+    dispatch(setPosts(request))
+  }
 
-  const getUserPosts = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
+  async function getUserPosts() {
+    const request = await getRequest(api.posts.userPosts(userId))
+    dispatch(setPosts(request))
+  }
+
 
   useEffect(() => {
     if (isProfile) {
@@ -36,6 +35,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       getPosts();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!posts) return <Loader />
 
   return (
     <>
@@ -51,9 +52,9 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           userPicturePath,
           likes,
           comments,
-        }) => (
+        }, key) => (
           <PostWidget
-            key={_id}
+            key={key}
             postId={_id}
             postUserId={userId}
             name={`${firstName} ${lastName}`}

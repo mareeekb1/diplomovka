@@ -18,7 +18,8 @@ import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "state";
+import { addPost, setPosts } from "state";
+import { useLocation } from "react-router-dom";
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
@@ -30,6 +31,12 @@ const MyPostWidget = ({ picturePath }) => {
   const token = localStorage.getItem("accessToken");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
+  const { pathname } = useLocation()
+
+  const getCommunityId = () => {
+    if (pathname.includes("/community/")) return pathname.replace('/community/', '')
+    return null
+  }
 
   const handlePost = async () => {
     const formData = new FormData();
@@ -39,6 +46,9 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
     }
+    if (getCommunityId()) {
+      formData.append("communityId", getCommunityId())
+    }
 
     const response = await fetch(`http://localhost:3001/posts`, {
       method: "POST",
@@ -46,7 +56,7 @@ const MyPostWidget = ({ picturePath }) => {
       body: formData,
     });
     const posts = await response.json();
-    dispatch(setPosts({ posts }));
+    dispatch(addPost(posts));
     setImage(null);
     setPost("");
   };

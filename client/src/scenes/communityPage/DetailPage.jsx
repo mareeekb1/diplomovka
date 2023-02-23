@@ -52,7 +52,7 @@ function DetailPage() {
             flexBasis={isNonMobileScreens ? "76%" : undefined}
             mt={isNonMobileScreens ? undefined : "2rem"}
           >
-            <CommunityPosts />
+            <CommunityPosts communityId={communityId} />
           </Box>
           <Box flexBasis={isNonMobileScreens ? "24%" : undefined}>
             <Participants users={community ? community.users : []} />
