@@ -1,5 +1,8 @@
 import {
   ChatBubbleOutlineOutlined,
+  Facebook,
+  Twitter,
+  LinkedIn,
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
@@ -19,7 +22,11 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
-
+import {
+  FacebookShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+} from "react-share";
 const PostWidget = ({
   postId,
   postUserId,
@@ -63,7 +70,7 @@ const PostWidget = ({
   function handleClick(event) {
     setOpenMenu(event.currentTarget);
   }
-  console.log(picturePath);
+  const urlLink = `http://localhost:3000/profile/${postUserId}`;
   return (
     <WidgetWrapper mt="4px">
       <Friend
@@ -112,9 +119,21 @@ const PostWidget = ({
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem onClick={handleClose}>option 1</MenuItem>
-          <MenuItem onClick={handleClose}>option 2</MenuItem>
-          <MenuItem onClick={handleClose}>option 3</MenuItem>
+          <FacebookShareButton url={urlLink}>
+            <MenuItem>
+              <Facebook />
+            </MenuItem>
+          </FacebookShareButton>
+          <LinkedinShareButton url={urlLink}>
+            <MenuItem>
+              <LinkedIn />
+            </MenuItem>
+          </LinkedinShareButton>
+          <TwitterShareButton url={urlLink}>
+            <MenuItem>
+              <Twitter />
+            </MenuItem>
+          </TwitterShareButton>
         </Menu>
         <IconButton
           onClick={handleClick}
