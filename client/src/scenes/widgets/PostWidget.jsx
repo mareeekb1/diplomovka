@@ -4,7 +4,15 @@ import {
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -29,10 +37,12 @@ const PostWidget = ({
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
+  const [openMenu, setOpenMenu] = useState(null);
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
+  const open = Boolean(openMenu);
 
   const patchLike = async () => {
     const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
@@ -47,6 +57,13 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
+  function handleClose() {
+    setOpenMenu(null);
+  }
+  function handleClick(event) {
+    setOpenMenu(event.currentTarget);
+  }
+  console.log(picturePath);
   return (
     <WidgetWrapper mt="4px">
       <Friend
@@ -87,8 +104,25 @@ const PostWidget = ({
             <Typography>{comments.length}</Typography>
           </FlexBetween>
         </FlexBetween>
-
-        <IconButton>
+        <Menu
+          anchorEl={openMenu}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={handleClose}>option 1</MenuItem>
+          <MenuItem onClick={handleClose}>option 2</MenuItem>
+          <MenuItem onClick={handleClose}>option 3</MenuItem>
+        </Menu>
+        <IconButton
+          onClick={handleClick}
+          id="basic-button"
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+        >
           <ShareOutlined />
         </IconButton>
       </FlexBetween>
