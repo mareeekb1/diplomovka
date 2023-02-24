@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setFriends } from "state";
 
-const FriendsSuggestions = ({ userId, communityId }) => {
+function FriendsSuggestions({ userId, communityId }) {
   const { palette } = useTheme();
   const primaryDark = palette.primary.light;
 
@@ -26,12 +26,10 @@ const FriendsSuggestions = ({ userId, communityId }) => {
 
   async function addFriend(friendId) {
     try {
-      const response = await patchRequest(
-        api.users.addRemoveFriend(userId, friendId)
-      );
+      const response = await patchRequest(api.users.addRemoveFriend(userId, friendId));
       if (response) {
-        dispatch(setFriends({ friends: response }));
         setAdded(response.map((item) => item._id));
+        dispatch(setFriends(response));
       }
     } catch (err) {
       console.log(err);

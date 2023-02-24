@@ -3,9 +3,11 @@ import WidgetWrapper from "components/WidgetWrapper";
 import PersonIcon from "@mui/icons-material/Person";
 import React from "react";
 import UserImage from "components/UserImage";
+import { useNavigate } from "react-router-dom";
 
 const Participants = ({ users }) => {
   const { palette } = useTheme();
+  const navigate = useNavigate()
 
   return (
     <WidgetWrapper maxHeight="40vh" overflow="auto">
@@ -13,6 +15,7 @@ const Participants = ({ users }) => {
       <List>
         {users.map(({ firstName, lastName, picturePath, _id }, key) => (
           <ListItem
+            onClick={() => navigate('/profile/' + _id)}
             key={key}
             sx={{
               "&:hover": {

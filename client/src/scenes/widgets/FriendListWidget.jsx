@@ -1,4 +1,5 @@
 import { Box, Typography, useTheme } from "@mui/material";
+import { getRequest } from "api";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect } from "react";
@@ -8,24 +9,16 @@ import { setFriends } from "state";
 const FriendListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
-  const token = localStorage.getItem("accessToken");
   const friends = useSelector((state) => state.user.friends);
 
-  const getFriends = async () => {
-    const response = await fetch(
-      `http://localhost:3001/users/${userId}/friends`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-    dispatch(setFriends({ friends: data }));
-  };
-
   useEffect(() => {
+    const getFriends = async () => {
+      const response = await getRequest(`http://localhost:3001/users/${userId}/friends`)
+      dispatch(setFriends(response))
+
+    };
     getFriends();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId, dispatch]);
 
   return (
     <WidgetWrapper>
@@ -38,9 +31,9 @@ const FriendListWidget = ({ userId }) => {
         Friend List
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
-        {friends.map((friend) => (
+        {friends.map((friend, key) => (
           <Friend
-            key={friend._id}
+            key={key}
             friendId={friend._id}
             name={`${friend.firstName} ${friend.lastName}`}
             subtitle={friend.occupation}
