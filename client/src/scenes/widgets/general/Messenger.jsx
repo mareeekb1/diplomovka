@@ -7,9 +7,10 @@ const Wrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.alt,
   borderRadius: "0.25rem",
   boxShadow: "2px 2px 4px -4px black",
-  position: "absolute",
+  position: "fixed",
   bottom: 4,
   right: 4,
+  zIndex: 100,
 }));
 
 const Messenger = () => {

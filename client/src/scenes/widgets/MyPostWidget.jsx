@@ -31,12 +31,13 @@ const MyPostWidget = ({ picturePath }) => {
   const token = localStorage.getItem("accessToken");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
 
   const getCommunityId = () => {
-    if (pathname.includes("/community/")) return pathname.replace('/community/', '')
-    return null
-  }
+    if (pathname.includes("/community/"))
+      return pathname.replace("/community/", "");
+    return null;
+  };
 
   const handlePost = async () => {
     const formData = new FormData();
@@ -47,7 +48,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
     if (getCommunityId()) {
-      formData.append("communityId", getCommunityId())
+      formData.append("communityId", getCommunityId());
     }
 
     const response = await fetch(`http://localhost:3001/posts`, {
@@ -79,12 +80,7 @@ const MyPostWidget = ({ picturePath }) => {
         />
       </FlexBetween>
       {isImage && (
-        <Box
-          border={`1px solid ${medium}`}
-          borderRadius="5px"
-          mt="1rem"
-          p="1rem"
-        >
+        <Box mt={"1rem"}>
           <Dropzone
             acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}

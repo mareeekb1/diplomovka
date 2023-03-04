@@ -3,7 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import FlexBetween from "./FlexBetween";
 
-const Message = ({ id, firstName, lastName, content }) => {
+const Message = ({ id, firstName, lastName, content, picturePath }) => {
   const { _id } = useSelector((state) => state.user);
   const isMine = _id === id;
   const { palette } = useTheme();

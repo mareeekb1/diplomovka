@@ -70,29 +70,33 @@ const CommunityDetailWidget = () => {
   };
   const Description = ({ description }) => {
     const [more, setMore] = useState(false);
+    const charLimit = 300;
     function sliceText() {
-      if (!more) return description.slice(0, 300) + "...";
+      if (!description) return "";
+      if (!more) return description.slice(0, charLimit) + "...";
       if (more) return description;
     }
     return (
       <Box sx={{ overflow: "auto", maxHeight: "32vh" }}>
         <Typography variant="h6">About</Typography>
         <Typography>{sliceText()}</Typography>
-        <Typography
-          onClick={() => setMore(!more)}
-          sx={{
-            fontWeight: "bold",
-            color: palette.neutral.medium,
-            fontSize: "12px",
-            "&:hover": {
-              cursor: "pointer",
-              color: palette.neutral.dark,
-              transition: "color 0.5s",
-            },
-          }}
-        >
-          {!more ? "Show more" : "Hide"}
-        </Typography>
+        {sliceText().length > charLimit && (
+          <Typography
+            onClick={() => setMore(!more)}
+            sx={{
+              fontWeight: "bold",
+              color: palette.neutral.medium,
+              fontSize: "12px",
+              "&:hover": {
+                cursor: "pointer",
+                color: palette.neutral.dark,
+                transition: "color 0.5s",
+              },
+            }}
+          >
+            {!more ? "Show more" : "Hide"}
+          </Typography>
+        )}
       </Box>
     );
   };

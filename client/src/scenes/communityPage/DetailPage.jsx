@@ -53,13 +53,16 @@ function DetailPage() {
           >
             <CommunityPosts communityId={communityId} community={community} />
           </Box>
-          <Box flexBasis={isNonMobileScreens ? "24%" : undefined}></Box>
+          <Box flexBasis={isNonMobileScreens ? "24%" : undefined}>
+            <CommunityContainer />
+          </Box>
         </>
       ) : (
         <Box
           flexBasis={isNonMobileScreens ? "48%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
+          <CommunityPosts communityId={communityId} community={community} />
           <CommunityContainer />
         </Box>
       )}

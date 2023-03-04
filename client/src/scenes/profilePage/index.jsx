@@ -16,8 +16,8 @@ const ProfilePage = () => {
 
   useEffect(() => {
     async function getUser() {
-      const request = await getRequest(api.users.getUserById(userId))
-      setUser(request)
+      const request = await getRequest(api.users.getUserById(userId));
+      setUser(request);
     }
     getUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -29,7 +29,7 @@ const ProfilePage = () => {
       <Navbar />
       <Box
         width="100%"
-        padding="2rem 6%"
+        padding="0.75rem 6%"
         display={isNonMobileScreens ? "flex" : "block"}
         gap="2rem"
         justifyContent="center"

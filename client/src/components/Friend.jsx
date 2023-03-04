@@ -21,7 +21,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
 
   const isFriend = friends.find((friend) => friend._id === friendId);
   const isNotMe = _id !== friendId;
-  const specificId = isNotMe ? friendId : _id
+  const specificId = isNotMe ? friendId : _id;
 
   const patchFriend = async () => {
     const response = await fetch(
@@ -42,42 +42,53 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     <FlexBetween>
       <FlexBetween gap="1rem">
         <UserImage image={userPicturePath} size="55px" userId={specificId} />
-        <Box
-          onClick={() => {
-            navigate(`/profile/${friendId}`);
-            navigate(0);
-          }}
-        >
-          <Typography
-            color={main}
-            variant="h5"
-            fontWeight="500"
-            sx={{
-              "&:hover": {
-                color: palette.primary.light,
-                cursor: "pointer",
-              },
-            }}
-          >
-            {name}
-          </Typography>
+        <Box>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Typography
+              onClick={() => {
+                navigate(`/profile/${friendId}`);
+              }}
+              color={main}
+              variant="h5"
+              fontWeight="500"
+              sx={{
+                "&:hover": {
+                  color: palette.primary.light,
+                  cursor: "pointer",
+                },
+              }}
+            >
+              {name}
+            </Typography>
+            {isNotMe && (
+              <Box>
+                {isFriend ? (
+                  <PersonRemoveOutlined
+                    sx={{
+                      color: primaryDark,
+                      cursor: "pointer",
+                      fontSize: "16px",
+                    }}
+                    onClick={() => patchFriend()}
+                  />
+                ) : (
+                  <PersonAddOutlined
+                    sx={{
+                      color: primaryDark,
+                      cursor: "pointer",
+                      fontSize: "16px",
+                    }}
+                    onClick={() => patchFriend()}
+                  />
+                )}
+              </Box>
+            )}
+          </Box>
           <Typography color={medium} fontSize="0.75rem">
             {subtitle}
           </Typography>
         </Box>
       </FlexBetween>
-      {isNotMe && (
-        <IconButton
-          onClick={() => patchFriend()}
-          sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
-        >
-          {isFriend ? (
-            <PersonRemoveOutlined sx={{ color: primaryDark }} />
-          ) : (
-            <PersonAddOutlined sx={{ color: primaryDark }} />
-          )}
-        </IconButton>
-      )}
     </FlexBetween>
   );
 };
