@@ -103,3 +103,31 @@ export const userJoinCommunity = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+export const updateCommunity = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const community = await Community.findById(id);
+    Object.keys(body).forEach((item) => {
+      if (body[item]) {
+        if (body[item]._id) {
+          if (item === "category") {
+            community.icon = body[item].icon;
+            community.categoryId = body[item]._id;
+          }
+          if (item === "owner") {
+            community.owner = body[item]._id;
+          }
+        } else {
+          if (body[item].length) {
+            community[item] = body[item];
+          }
+        }
+      }
+    });
+    await community.save();
+    res.status(200).json(community);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};

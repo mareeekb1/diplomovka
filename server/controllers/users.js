@@ -131,6 +131,7 @@ export const addRemoveFriend = async (req, res) => {
 export const editProfile = async (req, res) => {
   try {
     const { occupation, location, userId } = req.body;
+    console.log(req.body);
     const picture = req.file?.filename;
     const user = await User.findById(userId);
     if (occupation) user.occupation = occupation;

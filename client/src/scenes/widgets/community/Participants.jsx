@@ -7,15 +7,15 @@ import { useNavigate } from "react-router-dom";
 
 const Participants = ({ users }) => {
   const { palette } = useTheme();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
-    <WidgetWrapper maxHeight="40vh" overflow="auto">
+    <WidgetWrapper maxHeight="40vh" overflow="auto" mt={1}>
       <Typography variant="h4">Participants</Typography>
       <List>
         {users.map(({ firstName, lastName, picturePath, _id }, key) => (
           <ListItem
-            onClick={() => navigate('/profile/' + _id)}
+            onClick={() => navigate("/profile/" + _id)}
             key={key}
             sx={{
               "&:hover": {

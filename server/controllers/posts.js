@@ -52,8 +52,11 @@ export const getUserPosts = async (req, res) => {
 export const getCommunityPosts = async (req, res) => {
   try {
     const { communityId } = req.params;
-    const post = await Post.find({ communityId });
-    res.status(200).json(post.reverse());
+    const post = await Post.find();
+    const filteredPosts = post.filter(
+      (item) => item.communityId === communityId
+    );
+    res.status(200).json(filteredPosts.reverse());
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

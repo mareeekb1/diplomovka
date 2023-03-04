@@ -26,6 +26,7 @@ const CommunitySchema = mongoose.Schema(
       type: String,
     },
     icon: String,
+    description: String,
   },
   { timestamps: true }
 );

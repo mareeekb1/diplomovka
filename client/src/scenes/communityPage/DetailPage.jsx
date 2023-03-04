@@ -16,7 +16,6 @@ function DetailPage() {
   const { communityId } = useParams();
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const community = useSelector((state) => state.community);
-  const userId = useSelector((state) => state.user._id);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -52,12 +51,9 @@ function DetailPage() {
             flexBasis={isNonMobileScreens ? "76%" : undefined}
             mt={isNonMobileScreens ? undefined : "2rem"}
           >
-            <CommunityPosts communityId={communityId} />
+            <CommunityPosts communityId={communityId} community={community} />
           </Box>
-          <Box flexBasis={isNonMobileScreens ? "24%" : undefined}>
-            <Participants users={community ? community.users : []} />
-            <FriendsSuggestions userId={userId} communityId={community._id} />
-          </Box>
+          <Box flexBasis={isNonMobileScreens ? "24%" : undefined}></Box>
         </>
       ) : (
         <Box

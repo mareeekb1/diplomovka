@@ -64,6 +64,7 @@ export const authSlice = createSlice({
     },
     createCommunity: (state, action) => {
       state.allCommunities.push(action.payload);
+      state.myCommunities.push(action.payload);
     },
     setCommunityDetail: (state, action) => {
       state.community = action.payload;

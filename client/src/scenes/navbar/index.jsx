@@ -29,6 +29,7 @@ import FlexBetween from "components/FlexBetween";
 import { getRequest } from "api";
 import { api } from "api/routes";
 import Icon from "components/Icon";
+import Messenger from "scenes/widgets/general/Messenger";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -117,7 +118,7 @@ const Navbar = () => {
   }
 
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    <FlexBetween padding="0.3rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
         <Typography
           fontWeight="bold"
@@ -132,7 +133,7 @@ const Navbar = () => {
             },
           }}
         >
-          Expert
+          expert
         </Typography>
       </FlexBetween>
 
@@ -158,6 +159,14 @@ const Navbar = () => {
                 Home
               </Typography>
             </Box>
+
+            {myCommunities && (
+              <>
+                <Divider orientation="vertical" sx={{ height: "auto" }} />
+                {renderComminityTags()}
+                <Divider orientation="vertical" sx={{ height: "auto" }} />
+              </>
+            )}
             <Tooltip title={"Discover communities"}>
               <Box
                 sx={{
@@ -181,12 +190,6 @@ const Navbar = () => {
                 </Typography>
               </Box>
             </Tooltip>
-            {myCommunities && (
-              <>
-                <Divider orientation="vertical" sx={{ height: "auto" }} />
-                {renderComminityTags()}
-              </>
-            )}
           </Box>
           <FormControl variant="standard" value={fullName}>
             <Select
@@ -319,6 +322,7 @@ const Navbar = () => {
           </FlexBetween>
         </Box>
       )}
+      <Messenger />
     </FlexBetween>
   );
 };

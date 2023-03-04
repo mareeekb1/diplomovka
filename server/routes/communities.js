@@ -4,6 +4,7 @@ import {
   getCommunities,
   getCommunityById,
   getUserCommunities,
+  updateCommunity,
   userJoinCommunity,
 } from "../controllers/community.js";
 import { verifyToken } from "../middleware/auth.js";
@@ -19,5 +20,6 @@ router.get("/:communityId/detail", verifyToken, getCommunityById);
 /* UPDATE*/
 router.post("/create", verifyToken, createCommunity);
 router.patch("/:id/join", verifyToken, userJoinCommunity);
+router.patch("/:id/edit", verifyToken, updateCommunity);
 
 export default router;

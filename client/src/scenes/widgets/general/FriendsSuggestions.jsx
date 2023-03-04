@@ -26,7 +26,9 @@ function FriendsSuggestions({ userId, communityId }) {
 
   async function addFriend(friendId) {
     try {
-      const response = await patchRequest(api.users.addRemoveFriend(userId, friendId));
+      const response = await patchRequest(
+        api.users.addRemoveFriend(userId, friendId)
+      );
       if (response) {
         setAdded(response.map((item) => item._id));
         dispatch(setFriends(response));
@@ -47,13 +49,13 @@ function FriendsSuggestions({ userId, communityId }) {
   }, [communityId, userId]);
 
   function filterSuggestionsByAdded() {
-    return suggestions.filter((item) => !added.includes(item._id));
+    return suggestions.filter((item) => !added.includes(item._id)).slice(0, 3);
   }
   if (filterSuggestionsByAdded().length === 0) {
     return <div />;
   }
   return (
-    <WidgetWrapper maxHeight="40vh" overflow="auto" mt="4px">
+    <WidgetWrapper overflow="auto">
       <Typography variant="h4">Friends suggestions</Typography>
       <List>
         {filterSuggestionsByAdded().map(
@@ -68,10 +70,14 @@ function FriendsSuggestions({ userId, communityId }) {
                 }}
               >
                 <FlexBetween>
-                  <Box sx={{ display: "flex" }}>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Box mr="1rem">
                       {picturePath ? (
-                        <UserImage image={picturePath} size="20px" userId={_id} />
+                        <UserImage
+                          image={picturePath}
+                          size="20px"
+                          userId={_id}
+                        />
                       ) : (
                         <PersonIcon sx={{ fontSize: "20px" }} />
                       )}
@@ -102,6 +108,6 @@ function FriendsSuggestions({ userId, communityId }) {
       </List>
     </WidgetWrapper>
   );
-};
+}
 
 export default FriendsSuggestions;

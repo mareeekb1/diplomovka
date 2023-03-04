@@ -9,24 +9,23 @@ import PostWidget from "./PostWidget";
 const PostsWidget = ({ isProfile = false, communityId }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
-  const userId = useSelector((state) => state.user._id)
+  const userId = useSelector((state) => state.user._id);
 
   async function getPosts() {
-    let url = ''
+    let url = "";
     if (communityId) {
-      url = api.posts.communityPosts(communityId)
+      url = api.posts.communityPosts(communityId);
     } else {
-      url = api.posts.default(userId)
+      url = api.posts.default(userId);
     }
-    const request = await getRequest(url)
-    dispatch(setPosts(request))
+    const request = await getRequest(url);
+    dispatch(setPosts(request));
   }
 
   async function getUserPosts() {
-    const request = await getRequest(api.posts.userPosts(userId))
-    dispatch(setPosts(request))
+    const request = await getRequest(api.posts.userPosts(userId));
+    dispatch(setPosts(request));
   }
-
 
   useEffect(() => {
     if (isProfile) {
@@ -36,23 +35,26 @@ const PostsWidget = ({ isProfile = false, communityId }) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!posts) return <Loader />
+  if (!posts) return <Loader />;
 
   return (
     <>
       {posts.map(
-        ({
-          _id,
-          userId,
-          firstName,
-          lastName,
-          description,
-          location,
-          picturePath,
-          userPicturePath,
-          likes,
-          comments,
-        }, key) => (
+        (
+          {
+            _id,
+            userId,
+            firstName,
+            lastName,
+            description,
+            location,
+            picturePath,
+            userPicturePath,
+            likes,
+            comments,
+          },
+          key
+        ) => (
           <PostWidget
             key={key}
             postId={_id}

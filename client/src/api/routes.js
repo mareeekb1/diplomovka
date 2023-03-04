@@ -26,5 +26,6 @@ export const api = {
     joinCommunity: (id) => `${URL}community/${id}/join`,
     getByUserId: (id) => `${URL}community/${id}/user`,
     create: URL + "community/create",
+    edit: (id) => `${URL}community/${id}/edit`,
   },
 };
