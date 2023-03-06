@@ -13,9 +13,10 @@ const FriendListWidget = ({ userId }) => {
 
   useEffect(() => {
     const getFriends = async () => {
-      const response = await getRequest(`http://localhost:3001/users/${userId}/friends`)
-      dispatch(setFriends(response))
-
+      const response = await getRequest(
+        `http://localhost:3001/users/${userId}/friends`
+      );
+      dispatch(setFriends(response));
     };
     getFriends();
   }, [userId, dispatch]);

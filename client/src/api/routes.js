@@ -12,6 +12,7 @@ export const api = {
       `${URL}users/${userId}/${communityId}`,
     addRemoveFriend: (userId, friendId) => `${URL}users/${userId}/${friendId}`,
     editProfile: `${URL}users/edit`,
+    getFriends: (id) => `${URL}users/${id}/friends`,
   },
   posts: {
     patchLike: (id) => `${URL}posts/${id}/like`,

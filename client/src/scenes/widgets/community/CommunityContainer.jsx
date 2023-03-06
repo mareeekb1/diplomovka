@@ -83,7 +83,7 @@ const CommunityContainer = () => {
   return (
     <WidgetWrapper
       sx={{
-        height: "87%",
+        height: "80%",
         position: "fixed",
         display: "flex",
         flexDirection: "column",

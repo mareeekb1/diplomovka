@@ -1,8 +1,9 @@
 import { getRequest } from "api";
 import { api } from "api/routes";
 import Loader from "components/Loader";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 
@@ -10,36 +11,36 @@ const PostsWidget = ({ isProfile = false, communityId }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const userId = useSelector((state) => state.user._id);
-
-  async function getPosts() {
-    let url = "";
-    if (communityId) {
-      url = api.posts.communityPosts(communityId);
-    } else {
-      url = api.posts.default(userId);
-    }
-    const request = await getRequest(url);
-    dispatch(setPosts(request));
-  }
-
-  async function getUserPosts() {
-    const request = await getRequest(api.posts.userPosts(userId));
-    dispatch(setPosts(request));
-  }
+  const [loading, setLoading] = useState(true);
+  const [loadedPosts, setLoadedPosts] = useState(posts);
+  const location = useLocation();
 
   useEffect(() => {
-    if (isProfile) {
-      getUserPosts();
-    } else {
-      getPosts();
+    async function getPosts() {
+      setLoading(true);
+      let url = "";
+      if (isProfile) {
+        url = api.posts.userPosts(userId);
+      } else if (communityId) {
+        url = api.posts.communityPosts(communityId);
+      } else {
+        url = api.posts.default(userId);
+      }
+      const request = await getRequest(url);
+      if (request) {
+        setLoadedPosts(request);
+        dispatch(setPosts(request));
+        setLoading(false);
+      }
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    getPosts();
+  }, [dispatch, location]);
 
-  if (!posts) return <Loader />;
+  if (loading) return <Loader />;
 
   return (
     <>
-      {posts.map(
+      {loadedPosts.map(
         (
           {
             _id,
