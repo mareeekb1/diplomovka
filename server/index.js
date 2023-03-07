@@ -16,6 +16,7 @@ import postRoutes from "./routes/posts.js";
 import communityRoutes from "./routes/communities.js";
 import categoryRoutes from "./routes/category.js";
 import messageRoutes from "./routes/message.js";
+import generalRoutes from "./routes/general.js";
 //-----------------------------
 import { createPost } from "./controllers/posts.js";
 import { register } from "./controllers/auth.js";
@@ -76,6 +77,7 @@ app.use("/posts", postRoutes);
 app.use("/community", communityRoutes);
 app.use("/category", categoryRoutes);
 app.use("/message", messageRoutes);
+app.use("/general", generalRoutes);
 
 /* SOCKET SEVER */
 // const server = app.listen(process.env.PORT || 6001);

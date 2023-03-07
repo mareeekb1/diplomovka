@@ -8,8 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import CommunityContainer from "scenes/widgets/community/CommunityContainer";
 import CommunityPosts from "scenes/widgets/community/CommunityPosts";
-import Participants from "scenes/widgets/community/Participants";
-import FriendsSuggestions from "scenes/widgets/general/FriendsSuggestions";
 import { setCommunityDetail } from "state";
 
 function DetailPage() {

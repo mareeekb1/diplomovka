@@ -9,27 +9,36 @@ const AdvertWidget = () => {
   const medium = palette.neutral.medium;
 
   return (
-    <WidgetWrapper>
+    <WidgetWrapper mb={1}>
       <FlexBetween>
         <Typography color={dark} variant="h5" fontWeight="500">
           Sponsored
         </Typography>
-        <Typography color={medium}>Create Ad</Typography>
       </FlexBetween>
       <img
         width="100%"
         height="auto"
         alt="advert"
-        src="http://localhost:3001/assets/info4.jpeg"
+        src="/assets/lenovo.jpg"
         style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
       />
       <FlexBetween>
-        <Typography color={main}>MikaCosmetics</Typography>
-        <Typography color={medium}>mikacosmetics.com</Typography>
+        <Typography color={main}>Lenovo</Typography>
+        <Typography color={medium}>
+          <a
+            href="https://www.lenovo.com"
+            style={{ color: medium }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            https://www.lenovo.com
+          </a>
+        </Typography>
       </FlexBetween>
       <Typography color={medium} m="0.5rem 0">
-        Your pathway to stunning and immaculate beauty and made sure your skin
-        is exfoliating skin and shining like light.
+        Lenovo is now the world's leading PC manufacturer, narrowly ahead of HP.
+        It became the global #1 for the first time in 2013, and has jostled its
+        US rival for the top spot on and off since then.
       </Typography>
     </WidgetWrapper>
   );

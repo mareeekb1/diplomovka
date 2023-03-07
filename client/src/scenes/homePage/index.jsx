@@ -6,6 +6,7 @@ import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import FriendsSuggestions from "scenes/widgets/general/FriendsSuggestions";
 import CommunityList from "scenes/widgets/community/CommunityList";
+import AdvertWidget from "scenes/widgets/general/AdvertWidget";
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -34,6 +35,7 @@ const HomePage = () => {
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="24%">
+            <AdvertWidget />
             <FriendsSuggestions userId={_id} />
           </Box>
         )}

@@ -21,6 +21,7 @@ import {
   Menu,
   Close,
   Home,
+  Person as PersonIcon,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout, setCommunitiesFromApi } from "state";
@@ -30,6 +31,7 @@ import { getRequest } from "api";
 import { api } from "api/routes";
 import Icon from "components/Icon";
 import Messenger from "scenes/widgets/general/Messenger";
+import Searchbar from "./Searchbar";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -56,6 +58,7 @@ const Navbar = () => {
 
   const isHome = pathname === "home";
   const isCommunity = pathname === "community";
+  const isProfile = pathname === "profile/" + user._id;
 
   function NavigationBadge(props) {
     const { item, link } = props;
@@ -159,6 +162,24 @@ const Navbar = () => {
                 Home
               </Typography>
             </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                borderBottom: isProfile ? `2px solid ${primary}` : "",
+              }}
+            >
+              <IconButton onClick={() => navigate("/profile/" + user._id)}>
+                <PersonIcon
+                  sx={{ fontSize: "25px", color: isProfile ? primary : main }}
+                />
+              </IconButton>
+              <Typography sx={{ color: isProfile ? primary : main }}>
+                Profile
+              </Typography>
+            </Box>
 
             {myCommunities && (
               <>
@@ -191,41 +212,46 @@ const Navbar = () => {
               </Box>
             </Tooltip>
           </Box>
-          <FormControl variant="standard" value={fullName}>
-            <Select
-              value={fullName}
-              sx={{
-                backgroundColor: neutralLight,
-                width: "150px",
-                borderRadius: "0.25rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": {
-                  pr: "0.25rem",
-                  width: "3rem",
-                },
-                "& .MuiSelect-select:focus": {
+          <Box display={"flex"} gap={1} alignItems={"center"}>
+            <Searchbar />
+            <FormControl variant="standard" value={fullName}>
+              <Select
+                value={fullName}
+                sx={{
                   backgroundColor: neutralLight,
-                },
-              }}
-              input={<InputBase />}
-            >
-              <MenuItem value={fullName}>
-                <Typography>{fullName}</Typography>
-              </MenuItem>
-              <MenuItem
-                value={"Switch modes"}
-                onClick={() => dispatch(setMode())}
+                  width: "150px",
+                  borderRadius: "0.25rem",
+                  p: "0.25rem 1rem",
+                  "& .MuiSvgIcon-root": {
+                    pr: "0.25rem",
+                    width: "3rem",
+                  },
+                  "& .MuiSelect-select:focus": {
+                    backgroundColor: neutralLight,
+                  },
+                }}
+                input={<InputBase />}
               >
-                {theme.palette.mode === "dark" ? (
-                  <DarkMode sx={{ fontSize: "16px" }} />
-                ) : (
-                  <LightMode sx={{ color: dark, fontSize: "16px" }} />
-                )}
-                <Typography ml={"4px"}>Switch modes</Typography>
-              </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
-            </Select>
-          </FormControl>
+                <MenuItem value={fullName}>
+                  <Typography>{fullName}</Typography>
+                </MenuItem>
+                <MenuItem
+                  value={"Switch modes"}
+                  onClick={() => dispatch(setMode())}
+                >
+                  {theme.palette.mode === "dark" ? (
+                    <DarkMode sx={{ fontSize: "16px" }} />
+                  ) : (
+                    <LightMode sx={{ color: dark, fontSize: "16px" }} />
+                  )}
+                  <Typography ml={"4px"}>Switch modes</Typography>
+                </MenuItem>
+                <MenuItem onClick={() => dispatch(setLogout())}>
+                  Log Out
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
         </>
       ) : (
         <IconButton

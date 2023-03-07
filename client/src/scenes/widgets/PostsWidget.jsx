@@ -34,7 +34,7 @@ const PostsWidget = ({ isProfile = false, communityId }) => {
       }
     }
     getPosts();
-  }, [dispatch, location]);
+  }, [dispatch, location, userId, communityId, isProfile]);
 
   if (loading) return <Loader />;
 

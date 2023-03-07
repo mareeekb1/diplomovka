@@ -29,4 +29,7 @@ export const api = {
     create: URL + "community/create",
     edit: (id) => `${URL}community/${id}/edit`,
   },
+  general: {
+    search: (search) => URL + "general/search/" + search,
+  },
 };
