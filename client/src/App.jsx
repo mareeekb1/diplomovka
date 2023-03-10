@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
+import PageNotFound from "scenes/notFoundPage";
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -40,6 +41,7 @@ function App() {
               path="/community/:communityId"
               element={isAuth ? <CommunityPage /> : <Navigate to="/" />}
             />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
