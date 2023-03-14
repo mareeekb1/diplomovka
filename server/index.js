@@ -9,6 +9,9 @@ import morgan from "morgan";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { fileURLToPath } from "url";
+import { Server } from "socket.io";
+import { createServer } from "http";
+
 //IMPORT ROUTES----------------
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
@@ -22,7 +25,6 @@ import { createPost } from "./controllers/posts.js";
 import { register } from "./controllers/auth.js";
 import { verifyToken } from "./middleware/auth.js";
 import { editProfile } from "./controllers/users.js";
-// import socketio from "socket.io";
 
 /* CONFIGURATION */
 const __fileName = fileURLToPath(import.meta.url);
@@ -79,10 +81,6 @@ app.use("/category", categoryRoutes);
 app.use("/message", messageRoutes);
 app.use("/general", generalRoutes);
 
-/* SOCKET SEVER */
-// const server = app.listen(process.env.PORT || 6001);
-// const io = socketio(server);
-
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
 mongoose.set("strictQuery", false);
@@ -95,3 +93,7 @@ mongoose
     app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
   })
   .catch((error) => console.log(`${error} did not connect`));
+
+/* SOCKET SEVER */
+const server = createServer(app);
+const io = new Server(server);

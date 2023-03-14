@@ -42,7 +42,7 @@ const Messenger = () => {
     if (!loadedFriends) {
       getFriends();
     }
-  }, []);
+  }, [loadedFriends, user._id]);
 
   const FriendList = () => {
     if (!loadedFriends) return <Loader />;

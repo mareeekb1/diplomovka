@@ -14,6 +14,7 @@ const CommunitySchema = mongoose.Schema(
       type: Array,
       default: [],
     },
+    chatContainer: String,
     messages: {
       type: Array,
       default: [],
