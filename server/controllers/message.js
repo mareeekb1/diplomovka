@@ -21,9 +21,30 @@ export const sendMessage = async (req, res) => {
 
 export const getMessages = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id, fromLimit, toLimit } = req.params;
     const conversation = await Conversation.findById(id);
-    res.status(200).json(conversation.messages);
+    let messages = conversation.messages.reverse();
+    if (fromLimit && toLimit) {
+      messages = messages.slice(fromLimit, toLimit);
+    }
+    messages = messages.reverse();
+    res.status(200).json(messages);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+/* UPDATEA */
+export const readMessages = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const conversation = await Conversation.findById(id);
+    conversation.messages = conversation.messages.map((item) => ({
+      ...item,
+      isNew: false,
+    }));
+    await conversation.save();
+    res.status(201).json(conversation.messages);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

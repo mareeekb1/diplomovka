@@ -38,7 +38,16 @@ export const api = {
     create: URL + "conversation/create",
   },
   messages: {
-    get: (id) => URL + "message/" + id,
+    get: (id, from, to) => {
+      let array = [];
+      if (id) array.push(id);
+      if ((from || from === 0) && to) {
+        array.push(from);
+        array.push(to);
+      }
+      return URL + "message/" + array.join("/");
+    },
     send: URL + "message/send",
+    read: URL + "message/read",
   },
 };

@@ -1,15 +1,22 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { getRequest, postRequest } from "api";
 import { api } from "api/routes";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { Remove as RemoveIcon } from "@mui/icons-material";
+import { Close, Remove as RemoveIcon } from "@mui/icons-material";
 import io from "socket.io-client";
 import MessageInput from "./MessageInput";
 import Message from "components/Message";
+import Loader from "components/Loader";
+
 const WIDGET_WIDTH = 250;
 
-const ConversationChat = ({ index, updateConversation, ...props }) => {
+const ConversationChat = ({
+  index,
+  updateConversation,
+  openConversation,
+  ...props
+}) => {
   const { open, _id, members } = props;
 
   const theme = useTheme();
@@ -19,6 +26,11 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
   const [openedRef, setOpenedRef] = useState(scrollRef);
   const [friendReceiver, setFriendReceiver] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState({
+    from: 0,
+    to: 10,
+  });
 
   const SOCKET_SERVER_URL = "http://localhost:3002";
   const [socket, setSocket] = useState(null);
@@ -34,7 +46,7 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
       socket.disconnect();
       setSocket(null);
     };
-  }, [user._id]);
+  }, [SOCKET_SERVER_URL, user._id]);
 
   // Listen for incoming messages
   useEffect(() => {
@@ -42,46 +54,50 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
     socket.on("getMessage", (mess) => {
       setMessages((prevMessages) => [
         ...prevMessages,
-        { ...mess, isReceived: true },
+        { ...mess, isNew: true },
       ]);
+      if (openedRef.current && open) {
+        openedRef.current.scrollIntoView();
+      }
     });
-    if (openedRef.current) {
-      openedRef.current.scrollIntoView();
-    }
 
     return () => {
       socket.off("getMessage");
     };
-  }, [openedRef, socket]);
+  }, [open, openedRef, socket]);
 
   useEffect(() => {
     async function getUserName() {
       const friend = members.find((item) => item !== user._id);
-
-      const request = await getRequest(api.users.getUserById(friend));
-      if (request) setFriendReceiver(request);
+      if (friend) {
+        const request = await getRequest(api.users.getUserById(friend));
+        if (request) setFriendReceiver(request);
+      }
     }
     async function getMessages() {
-      const request = await getRequest(api.conversation.get(_id));
-      if (request) setMessages(request.messages);
+      setLoading(true);
+      const request = await getRequest(
+        api.messages.get(_id, limit.from, limit.to)
+      );
+      if (request) setMessages(request);
+      setLoading(false);
     }
-    if (!friendReceiver) {
-      getUserName();
-    }
+    getUserName();
     getMessages();
-  }, [_id, friendReceiver, members, user._id]);
+  }, [_id, limit.from, limit.to, members, user._id, limit]);
 
-  function handleOpenChat() {
+  async function handleOpenChat() {
     updateConversation(_id, "open", true);
     setOpenedRef(scrollRef);
-    seeNewMessage();
+    await seeNewMessage();
   }
   function handleCloseChat() {
     updateConversation(_id, "open", false);
     setOpenedRef({ current: null, ...openedRef });
   }
-  function seeNewMessage() {
-    setMessages(messages.map(({ isReceived, ...rest }) => rest));
+  async function seeNewMessage() {
+    setMessages(messages.map(({ isNew, ...rest }) => rest));
+    await postRequest(api.messages.read, { id: _id });
   }
 
   async function sendMessage(text) {
@@ -91,6 +107,7 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
       senderId: user._id,
       senderName: user.firstName,
       senderLastName: user.lastName,
+      isNew: true,
     });
     if (request) {
       socket.emit("sendMessage", {
@@ -98,8 +115,10 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
         receiverId: friendReceiver._id,
         ...request,
       });
-      setMessages([...messages, request]);
-      openedRef.current.scrollIntoView();
+      setMessages([...messages, { ...request, isNew: false }]);
+      if (Boolean(openedRef.current) && open) {
+        openedRef.current.scrollIntoView();
+      }
     }
   }
 
@@ -109,10 +128,23 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
     }
   }, [open, openedRef, messages]);
 
-  const USER_NAME = friendReceiver
-    ? `${friendReceiver.firstName} ${friendReceiver.lastName}`
-    : "...";
-  const newMessages = messages.filter((item) => item.isReceived).length;
+  const onScroll = () => {
+    const rootElem = document.getElementById("messagesRoot");
+    const scrollTop = rootElem.scrollTop;
+    if (scrollTop === 0) {
+      setLoading(true);
+      setLimit((prev) => ({ ...prev, to: prev.to + 10 }));
+    }
+  };
+  useEffect(() => {
+    const root = document.getElementById("messagesRoot");
+    root.addEventListener("scroll", onScroll);
+    return () => {
+      root.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  const newMessages = messages.filter((item) => item.isNew).length;
   const isNewMessage = newMessages > 0;
   return (
     <Box
@@ -172,10 +204,13 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
                   {newMessages}
                 </Box>
               )}
-              {USER_NAME}
+              {friendReceiver
+                ? `${friendReceiver.firstName} ${friendReceiver.lastName}`
+                : "..."}
               <RemoveIcon />
             </Box>
             <Box
+              id="messagesRoot"
               sx={{
                 background: theme.palette.background.alt,
                 overflow: "auto",
@@ -196,6 +231,11 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
                   Be the first. Send a messege.
                 </Box>
               )}
+              {loading && (
+                <Box id="loader">
+                  <Loader />
+                </Box>
+              )}
               {messages.map((item, key) => (
                 <Box mt={1} key={key}>
                   <Message
@@ -207,6 +247,7 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
                   />
                 </Box>
               ))}
+
               <div ref={scrollRef} />
             </Box>
             <MessageInput
@@ -217,7 +258,7 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
         ) : (
           <Box
             sx={{
-              padding: "0.5rem 1rem",
+              padding: "0.2rem 1rem",
               gap: 1,
               display: "flex",
               alignItems: "center",
@@ -236,8 +277,8 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
                 sx={{
                   padding: 1,
                   borderRadius: 50,
-                  width: 10,
-                  height: 10,
+                  width: 12,
+                  height: 12,
                   fontSize: 10,
                   display: "flex",
                   alignItems: "center",
@@ -245,10 +286,31 @@ const ConversationChat = ({ index, updateConversation, ...props }) => {
                   background: theme.palette.background.alt,
                 }}
               >
-                {newMessages}
+                <span style={{ marginLeft: "-2px" }}>{newMessages}</span>
               </Box>
             )}
-            <Typography>{USER_NAME}</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography>
+                {friendReceiver
+                  ? `${friendReceiver.firstName} ${friendReceiver.lastName}`
+                  : "..."}
+              </Typography>
+              <Box>
+                <IconButton
+                  size="small"
+                  onClick={() => openConversation(friendReceiver._id)}
+                >
+                  <Close />
+                </IconButton>
+              </Box>
+            </Box>
           </Box>
         )}
       </Box>

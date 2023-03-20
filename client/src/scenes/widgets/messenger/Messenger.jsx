@@ -83,6 +83,12 @@ const Messenger = () => {
   async function openConversation(friendId) {
     const conversation = await getConversation(friendId);
     if (!conversation.toggled) {
+      await postRequest(api.messages.read, { id: conversation._id });
+      updateConversation(
+        conversation._id,
+        "messages",
+        conversation.messages.map((item) => ({ ...item, isNew: false }))
+      );
       updateConversation(conversation._id, "open", true);
       updateConversation(conversation._id, "toggled", true);
     } else {
@@ -101,6 +107,7 @@ const Messenger = () => {
               key={key}
               index={key}
               updateConversation={updateConversation}
+              openConversation={openConversation}
               {...item}
             />
           ))}
@@ -135,12 +142,12 @@ const Messenger = () => {
               borderRadius: "0.25rem",
               backgroundColor: theme.palette.background.alt,
               border: "1px solid",
-              padding: "0.5rem 1rem",
             }}
           >
             <FlexBetween
               onClick={() => setOpen(!open)}
               sx={{
+                padding: "0.5rem 1rem",
                 cursor: "pointer",
               }}
             >
@@ -150,7 +157,10 @@ const Messenger = () => {
             <Divider />
             <Box sx={{ display: "flex", height: "500px" }}>
               <Box sx={{ height: "100%", width: "100%" }}>
-                <FriendList openConversation={openConversation} />
+                <FriendList
+                  openConversation={openConversation}
+                  conversations={conversations}
+                />
               </Box>
             </Box>
           </Box>

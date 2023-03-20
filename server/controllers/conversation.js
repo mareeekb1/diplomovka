@@ -1,6 +1,5 @@
 import Conversation from "../models/Conversation.js";
 import User from "../models/User.js";
-import { convertObjectIdToString } from "../utils/utils.js";
 
 /* CREATE */
 export const createConversation = async (req, res) => {

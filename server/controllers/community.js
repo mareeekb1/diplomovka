@@ -1,4 +1,5 @@
 import Community from "../models/Community.js";
+import Conversation from "../models/Conversation.js";
 import User from "../models/User.js";
 import { convertObjectIdToString } from "../utils/utils.js";
 
@@ -7,16 +8,26 @@ export const createCommunity = async (req, res) => {
   try {
     const { name, categoryId, icon, owner } = req.body;
     const user = await User.findById(owner);
+
     const newCommunity = new Community({
       name,
       categoryId,
       icon,
       owner,
-      users: [user],
+      users: [user._id],
     });
+    const conversation = new Conversation({
+      members: [user],
+      communityId: newCommunity._id,
+    });
+
+    newCommunity.chatContainer = conversation._id;
     user.communities.push(newCommunity._id);
+
+    await conversation.save();
     await user.save();
     await newCommunity.save();
+
     res.status(201).json(newCommunity);
   } catch (err) {
     res.status(409).json({ message: err.message });
@@ -80,6 +91,7 @@ export const userJoinCommunity = async (req, res) => {
 
     const user = await User.findById(userId);
     const community = await Community.findById(id);
+    const conversation = await Conversation.findById(community.chatContainer);
 
     const isParticipant = community.users.find(
       ({ _id }) => convertObjectIdToString(_id) === userId
@@ -92,12 +104,17 @@ export const userJoinCommunity = async (req, res) => {
       user.communities = user.communities.filter(
         (item) => convertObjectIdToString(item) !== userId
       );
+      conversation.members = conversation.members.filter(
+        (item) => convertObjectIdToString(item) !== userId
+      );
     } else {
       user.communities.push(convertObjectIdToString(community._id));
       community.users.push(user);
+      conversation.members.push(user);
     }
     await community.save();
     await user.save();
+    await conversation.save();
     res.status(200).json(community);
   } catch (err) {
     res.status(404).json({ message: err.message });
