@@ -40,6 +40,10 @@ const UserSchema = new mongoose.Schema(
     },
     location: String,
     occupation: String,
+    conversations: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );

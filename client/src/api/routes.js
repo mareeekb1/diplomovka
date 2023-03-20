@@ -32,4 +32,13 @@ export const api = {
   general: {
     search: (search) => URL + "general/search/" + search,
   },
+  conversation: {
+    get: (id) => URL + "conversation/" + id,
+    getUserConversations: (id) => `${URL}conversation/${id}/user`,
+    create: URL + "conversation/create",
+  },
+  messages: {
+    get: (id) => URL + "message/" + id,
+    send: URL + "message/send",
+  },
 };

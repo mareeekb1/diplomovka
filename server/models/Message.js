@@ -2,16 +2,11 @@ import mongoose from "mongoose";
 
 const MessageSchema = mongoose.Schema(
   {
-    communityId: {
-      type: String,
-      required: true,
-    },
-    sender: {
-      type: String,
-    },
-    text: {
-      type: String,
-    },
+    conversationId: String,
+    text: String,
+    senderId: String,
+    senderName: String,
+    senderLastName: String,
   },
   { timestamps: true }
 );

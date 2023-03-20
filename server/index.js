@@ -20,6 +20,7 @@ import communityRoutes from "./routes/communities.js";
 import categoryRoutes from "./routes/category.js";
 import messageRoutes from "./routes/message.js";
 import generalRoutes from "./routes/general.js";
+import conversationRoutes from "./routes/conversation.js";
 //-----------------------------
 import { createPost } from "./controllers/posts.js";
 import { register } from "./controllers/auth.js";
@@ -33,8 +34,8 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+// app.use(helmet());
+// app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
@@ -80,9 +81,11 @@ app.use("/community", communityRoutes);
 app.use("/category", categoryRoutes);
 app.use("/message", messageRoutes);
 app.use("/general", generalRoutes);
+app.use("/conversation", conversationRoutes);
 
 /* MONGOOSE SETUP */
-const PORT = process.env.PORT || 6001;
+const PORT = process.env.PORT || 3001;
+const SOCET_PORT = 3002;
 mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -94,6 +97,46 @@ mongoose
   })
   .catch((error) => console.log(`${error} did not connect`));
 
-/* SOCKET SEVER */
+/* SOCKET SERVER */
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, { cors: "*" });
+
+// List of connected users
+let users = [];
+
+// Event listener for new connection
+io.on("connection", (socket) => {
+  console.log(socket.id, "connected");
+
+  // Event listener for new user joining
+  socket.on("join", (userId) => {
+    console.log("User joined:", userId);
+    users.push({ id: socket.id, userId: userId });
+    io.emit("getUsers", users);
+  });
+
+  // Event listener for new message
+  socket.on("sendMessage", ({ senderId, receiverId, text, ...rest }) => {
+    console.log(`Message received from ${senderId} to ${receiverId}: ${text}`);
+    const user = users.find((u) => u.userId === receiverId);
+    if (user) {
+      io.to(user.id).emit("getMessage", {
+        senderId,
+        text,
+        ...rest,
+      });
+    }
+  });
+
+  // Event listener for disconnection
+  socket.on("disconnect", () => {
+    console.log(socket.id, "disconnected");
+    users = users.filter((user) => user.id !== socket.id);
+    io.emit("getUsers", users);
+  });
+});
+
+// Listen for incoming connections on port 3002
+server.listen(SOCET_PORT, () => {
+  console.log("Socket server listening on port 3002");
+});

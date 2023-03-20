@@ -30,7 +30,7 @@ import FlexBetween from "components/FlexBetween";
 import { getRequest } from "api";
 import { api } from "api/routes";
 import Icon from "components/Icon";
-import Messenger from "scenes/widgets/general/Messenger";
+import Messenger from "scenes/widgets/messenger/Messenger";
 import Searchbar from "./Searchbar";
 
 const Navbar = () => {
