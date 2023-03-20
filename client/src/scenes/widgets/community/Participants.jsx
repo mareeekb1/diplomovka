@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Participants = ({ users }) => {
   const { palette } = useTheme();
   const navigate = useNavigate();
+  console.log(users);
 
   return (
     <WidgetWrapper maxHeight="40vh" overflow="auto" mt={1}>

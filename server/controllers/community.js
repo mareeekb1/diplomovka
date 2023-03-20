@@ -14,7 +14,7 @@ export const createCommunity = async (req, res) => {
       categoryId,
       icon,
       owner,
-      users: [user._id],
+      users: [user],
     });
     const conversation = new Conversation({
       members: [user],

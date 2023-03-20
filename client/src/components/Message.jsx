@@ -40,7 +40,9 @@ const Message = ({ id, firstName, lastName, content, picturePath, sendOn }) => {
           >{`${firstName} ${lastName}`}</Typography>
           <Box sx={{ fontSize: 8, lineHeight: 1.5 }}>{difference()}</Box>
         </Box>
-        <Typography>{content}</Typography>
+        <Typography sx={{ overflowWrap: "break-word", wordBreak: "break-all" }}>
+          {content}
+        </Typography>
       </Box>
     );
   };

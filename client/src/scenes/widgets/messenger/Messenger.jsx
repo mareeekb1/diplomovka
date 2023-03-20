@@ -123,8 +123,7 @@ const Messenger = () => {
               borderRadius: "0.25rem",
               backgroundColor: theme.palette.background.alt,
               padding: "0.5rem 1rem",
-              border: "1px solid",
-              borderColor: theme.palette.neutral.main,
+              border: `1px solid ${theme.palette.neutral.medium}`,
               "&:hover": {
                 background: theme.palette.neutral.light,
                 cursor: "pointer",
@@ -142,7 +141,7 @@ const Messenger = () => {
               display: "block",
               borderRadius: "0.25rem",
               backgroundColor: theme.palette.background.alt,
-              border: "1px solid",
+              border: `1px solid ${theme.palette.neutral.medium}`,
             }}
           >
             <FlexBetween

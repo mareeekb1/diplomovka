@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import { getRequest, postRequest } from "api";
 import { api } from "api/routes";
 import { useEffect, useRef, useState } from "react";
@@ -128,21 +128,21 @@ const ConversationChat = ({
     }
   }, [open, openedRef, messages]);
 
-  const onScroll = () => {
-    const rootElem = document.getElementById("messagesRoot");
-    const scrollTop = rootElem.scrollTop;
-    if (scrollTop === 0) {
-      setLoading(true);
-      setLimit((prev) => ({ ...prev, to: prev.to + 10 }));
-    }
-  };
   useEffect(() => {
+    const onScroll = () => {
+      const rootElem = document.getElementById("messagesRoot");
+      const scrollTop = rootElem.scrollTop;
+      if (scrollTop === 0) {
+        setLimit({ ...limit, to: limit.to + 10 });
+        setLoading(true);
+      }
+    };
     const root = document.getElementById("messagesRoot");
     root.addEventListener("scroll", onScroll);
     return () => {
       root.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [limit]);
 
   const newMessages = messages.filter((item) => item.isNew).length;
   const isNewMessage = newMessages > 0;
@@ -166,7 +166,7 @@ const ConversationChat = ({
             : theme.palette.background.alt,
           borderRadius: "0.25rem",
           border: "1px solid",
-          borderColor: theme.palette.neutral.main,
+          borderColor: theme.palette.neutral.medium,
         }}
       >
         {open ? (
@@ -250,6 +250,7 @@ const ConversationChat = ({
 
               <div ref={scrollRef} />
             </Box>
+            <Divider />
             <MessageInput
               sendMessage={sendMessage}
               seeNewMessage={seeNewMessage}
