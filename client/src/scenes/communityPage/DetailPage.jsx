@@ -52,7 +52,7 @@ function DetailPage() {
             <CommunityPosts communityId={communityId} community={community} />
           </Box>
           <Box flexBasis={isNonMobileScreens ? "24%" : undefined}>
-            <CommunityContainer />
+            <CommunityContainer chatId={community.chatContainer} />
           </Box>
         </>
       ) : (
@@ -61,7 +61,7 @@ function DetailPage() {
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
           <CommunityPosts communityId={communityId} community={community} />
-          <CommunityContainer />
+          <CommunityContainer chatId={community.chatContainer} />
         </Box>
       )}
     </>

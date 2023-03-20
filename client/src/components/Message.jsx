@@ -19,32 +19,28 @@ const Message = ({ id, firstName, lastName, content, picturePath, sendOn }) => {
 
   const MessageBuble = () => {
     return (
-      <Box>
-        <Box
-          sx={{
-            background: isMine ? palette.primary.dark : palette.neutral.light,
-            padding: "0.25rem",
-            borderRadius: isMine
-              ? "0.5rem 0.5rem 0 0.5rem"
-              : "0.5rem 0.5rem 0.5rem 0",
-            marginRight: !isMine ? "4rem" : "0",
-            marginLeft: isMine ? "4rem" : "0",
-          }}
-        >
-          <Box
-            sx={{ display: "flex", gap: 1, justifyContent: "space-between" }}
-          >
-            <Typography
-              fontWeight="bold"
-              fontSize="12px"
-              sx={{
-                textAlign: isMine ? "end" : "unset",
-              }}
-            >{`${firstName} ${lastName}`}</Typography>
-            <Box sx={{ fontSize: 8, lineHeight: 1.5 }}>{difference()}</Box>
-          </Box>
-          <Typography>{content}</Typography>
+      <Box
+        sx={{
+          background: isMine ? palette.primary.dark : palette.neutral.light,
+          padding: "0.25rem",
+          borderRadius: isMine
+            ? "0.5rem 0.5rem 0 0.5rem"
+            : "0.5rem 0.5rem 0.5rem 0",
+          marginRight: !isMine ? "4rem" : "0",
+          marginLeft: isMine ? "4rem" : "0",
+        }}
+      >
+        <Box sx={{ display: "flex", gap: 1, justifyContent: "space-between" }}>
+          <Typography
+            fontWeight="bold"
+            fontSize="12px"
+            sx={{
+              textAlign: isMine ? "end" : "unset",
+            }}
+          >{`${firstName} ${lastName}`}</Typography>
+          <Box sx={{ fontSize: 8, lineHeight: 1.5 }}>{difference()}</Box>
         </Box>
+        <Typography>{content}</Typography>
       </Box>
     );
   };

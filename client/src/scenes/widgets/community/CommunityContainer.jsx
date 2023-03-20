@@ -1,84 +1,87 @@
-import {
-  Box,
-  Divider,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  List,
-  ListItem,
-  OutlinedInput,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
+import { Box, Divider, List, ListItem, Typography } from "@mui/material";
 import WidgetWrapper from "components/WidgetWrapper";
 import Message from "components/Message";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import io from "socket.io-client";
+import { useSelector } from "react-redux";
+import { getRequest, postRequest } from "api";
+import { api } from "api/routes";
+import Loader from "components/Loader";
+import ChatContainerInput from "./ChatContainerInput";
 
-const dummyMessages = [
-  {
-    id: "63e7a506ba14d1ed961373ba",
-    firstName: "Marek",
-    lastName: "Belej",
-    content: "text",
-  },
-  {
-    id: "63ae27f61da0c1faf04891ss",
-    firstName: "John",
-    lastName: "Doe",
-    content: "text",
-  },
-  {
-    id: "63e7a506ba14d1ed961373ba",
-    firstName: "Marek",
-    lastName: "Belej",
-    content: "text",
-  },
-  {
-    id: "63ae27f61da0c1faf04891ss",
-    firstName: "John",
-    lastName: "Doe",
-    content: "text",
-  },
-  {
-    id: "63e7a506ba14d1ed961373ba",
-    firstName: "Marek",
-    lastName: "Belej",
-    content: "text",
-  },
-  {
-    id: "63ae27f61da0c1faf04891ss",
-    firstName: "John",
-    lastName: "Doe",
-    content: "text",
-  },
-  {
-    id: "64036d7ee876e7aa109150ea",
-    firstName: "Vlado",
-    lastName: "Putin",
-    content: "tedaxt",
-  },
-  {
-    id: "64036d7ee876e7aa109150ea",
-    firstName: "Vlado",
-    lastName: "Putin",
-    content: "tedaxt",
-  },
-  {
-    id: "64036d7ee876e7aa109150ea",
-    firstName: "Vlado",
-    lastName: "Putin",
-    content: "tedaxt",
-  },
-];
-
-const CommunityContainer = () => {
-  const { palette } = useTheme();
+const CommunityContainer = ({ chatId }) => {
   const scrollRef = useRef();
+  const user = useSelector((state) => state.user);
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const SOCKET_SERVER_URL = "http://localhost:3002";
+  const [socket, setSocket] = useState(null);
+  // Connect to the socket server on component mount
+  useEffect(() => {
+    const socket = io(SOCKET_SERVER_URL);
+    socket.emit("join", { userId: user._id, chatId: chatId });
+    setSocket(socket);
+
+    // Disconnect from socket server on component unmount
+    return () => {
+      socket.disconnect();
+      setSocket(null);
+    };
+  }, [SOCKET_SERVER_URL, chatId, user._id]);
+
+  // Listen for incoming messages
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("getMessage", (mess) => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ...mess, isNew: true },
+      ]);
+      if (scrollRef.current) {
+        scrollRef.current.scrollIntoView();
+      }
+    });
+
+    return () => {
+      socket.off("getMessage");
+    };
+  }, [scrollRef, socket]);
 
   useEffect(() => {
-    scrollRef.current.scrollIntoView({ behavior: "smooth" });
-  }, []);
+    async function getConversation() {
+      setIsLoading(true);
+      const request = await getRequest(api.conversation.get(chatId));
+      if (request) {
+        setMessages(request.messages);
+      }
+      setIsLoading(false);
+    }
+    getConversation();
+  }, [chatId]);
+
+  useEffect(() => {
+    if (!isLoading) scrollRef.current.scrollIntoView();
+  }, [isLoading, messages]);
+
+  async function sendMessage(text) {
+    const request = await postRequest(api.messages.send, {
+      text: text,
+      conversationId: chatId,
+      senderId: user._id,
+      senderName: user.firstName,
+      senderLastName: user.lastName,
+      isNew: true,
+    });
+    if (request) {
+      socket.emit("sendMessage", {
+        senderId: socket.id,
+        chatId: chatId,
+        ...request,
+      });
+      setMessages([...messages, { ...request, isNew: false }]);
+    }
+  }
 
   return (
     <WidgetWrapper
@@ -88,46 +91,41 @@ const CommunityContainer = () => {
         display: "flex",
         flexDirection: "column",
         borderRadius: "0.25rem 0 0 0.25rem",
-        width: "-webkit-fill-available",
+        padding: 0,
+        width: "400px",
       }}
     >
-      <Typography variant="h4">Community converastion</Typography>
+      <Typography p="1rem" variant="h4" width={"100%"}>
+        Community converastion
+      </Typography>
       <Divider />
-      <List sx={{ marginBottom: "0.5rem", height: "100%", overflow: "auto" }}>
-        {dummyMessages.map((item, key) => (
-          <ListItem sx={{ paddingX: 0 }} key={key}>
-            <Message key={key} content {...item} />
-          </ListItem>
-        ))}
-        <div ref={scrollRef} />
-      </List>
-      <Box position="sticky" bottom={0}>
-        <FormControl
-          fullWidth
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <List
           sx={{
-            background: palette.background.default,
+            marginBottom: "0.5rem",
+            height: "100%",
+            overflow: "auto",
+            p: "0.5rem",
           }}
         >
-          <OutlinedInput
-            id="outlined-adornment-amount"
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton>
-                  <SendIcon
-                    sx={{
-                      color: palette.primary.main,
-                      "&:hover": {
-                        color: palette.primary.dark,
-                        cursor: "pointer",
-                        transition: "color 0.5s",
-                      },
-                    }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
+          {messages.map((item, key) => (
+            <ListItem sx={{ padding: "2px 0" }} key={key}>
+              <Message
+                content={item.text}
+                firstName={item.senderName}
+                lastName={item.senderLastName}
+                id={item.senderId}
+                sendOn={item.createdAt}
+              />
+            </ListItem>
+          ))}
+          <div ref={scrollRef} />
+        </List>
+      )}
+      <Box position="sticky" bottom={0}>
+        <ChatContainerInput sendMessage={sendMessage} />
       </Box>
     </WidgetWrapper>
   );

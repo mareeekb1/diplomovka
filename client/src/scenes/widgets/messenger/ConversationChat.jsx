@@ -38,7 +38,7 @@ const ConversationChat = ({
   // Connect to the socket server on component mount
   useEffect(() => {
     const socket = io(SOCKET_SERVER_URL);
-    socket.emit("join", user._id);
+    socket.emit("join", { userId: user._id });
     setSocket(socket);
 
     // Disconnect from socket server on component unmount

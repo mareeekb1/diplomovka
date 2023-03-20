@@ -17,6 +17,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   bottom: 4,
   right: 4,
   zIndex: 100,
+  boxShadow: "2px 2px 4px -4px black",
 }));
 
 const Messenger = () => {

@@ -121,235 +121,237 @@ const Navbar = () => {
   }
 
   return (
-    <FlexBetween padding="0.3rem 6%" backgroundColor={alt}>
-      <FlexBetween gap="1.75rem">
-        <Typography
-          fontWeight="bold"
-          fontSize="clamp(1rem, 2rem, 2.25rem)"
-          color="primary"
-          onClick={() => navigate("/home")}
-          sx={{
-            "&:hover": {
-              color: primaryLight,
-              cursor: "pointer",
-              transition: "color 0.5s",
-            },
-          }}
-        >
-          expert
-        </Typography>
-      </FlexBetween>
+    <>
+      <FlexBetween padding="0.3rem 6%" backgroundColor={alt}>
+        <FlexBetween gap="1.75rem">
+          <Typography
+            fontWeight="bold"
+            fontSize="clamp(1rem, 2rem, 2.25rem)"
+            color="primary"
+            onClick={() => navigate("/home")}
+            sx={{
+              "&:hover": {
+                color: primaryLight,
+                cursor: "pointer",
+                transition: "color 0.5s",
+              },
+            }}
+          >
+            expert
+          </Typography>
+        </FlexBetween>
 
-      {/* DESKTOP NAV */}
-      {isNonMobileScreens ? (
-        <>
-          <Box sx={{ display: "flex", gap: "1rem" }}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                borderBottom: isHome ? `2px solid ${primary}` : "",
-              }}
-            >
-              <IconButton onClick={() => navigate("/home")}>
-                <Home
-                  sx={{ fontSize: "25px", color: isHome ? primary : main }}
-                />
-              </IconButton>
-              <Typography sx={{ color: isHome ? primary : main }}>
-                Home
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                borderBottom: isProfile ? `2px solid ${primary}` : "",
-              }}
-            >
-              <IconButton onClick={() => navigate("/profile/" + user._id)}>
-                <PersonIcon
-                  sx={{ fontSize: "25px", color: isProfile ? primary : main }}
-                />
-              </IconButton>
-              <Typography sx={{ color: isProfile ? primary : main }}>
-                Profile
-              </Typography>
-            </Box>
-
-            {myCommunities && (
-              <>
-                <Divider orientation="vertical" sx={{ height: "auto" }} />
-                {renderComminityTags()}
-                <Divider orientation="vertical" sx={{ height: "auto" }} />
-              </>
-            )}
-            <Tooltip title={"Discover communities"}>
+        {/* DESKTOP NAV */}
+        {isNonMobileScreens ? (
+          <>
+            <Box sx={{ display: "flex", gap: "1rem" }}>
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   flexDirection: "column",
-                  borderBottom: isCommunity ? `2px solid ${primary}` : "",
+                  borderBottom: isHome ? `2px solid ${primary}` : "",
                 }}
               >
-                <IconButton onClick={() => navigate("/community")}>
-                  <PublicIcon
-                    sx={{
-                      fontSize: "25px",
-                      color: isCommunity ? primary : main,
-                    }}
+                <IconButton onClick={() => navigate("/home")}>
+                  <Home
+                    sx={{ fontSize: "25px", color: isHome ? primary : main }}
                   />
                 </IconButton>
-                <Typography sx={{ color: isCommunity ? primary : main }}>
-                  Discover
+                <Typography sx={{ color: isHome ? primary : main }}>
+                  Home
                 </Typography>
               </Box>
-            </Tooltip>
-          </Box>
-          <Box display={"flex"} gap={1} alignItems={"center"}>
-            <Searchbar />
-            <FormControl variant="standard" value={fullName}>
-              <Select
-                value={fullName}
+              <Box
                 sx={{
-                  backgroundColor: neutralLight,
-                  width: "150px",
-                  borderRadius: "0.25rem",
-                  p: "0.25rem 1rem",
-                  "& .MuiSvgIcon-root": {
-                    pr: "0.25rem",
-                    width: "3rem",
-                  },
-                  "& .MuiSelect-select:focus": {
-                    backgroundColor: neutralLight,
-                  },
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  borderBottom: isProfile ? `2px solid ${primary}` : "",
                 }}
-                input={<InputBase />}
               >
-                <MenuItem value={fullName}>
-                  <Typography>{fullName}</Typography>
-                </MenuItem>
-                <MenuItem
-                  value={"Switch modes"}
-                  onClick={() => dispatch(setMode())}
-                >
-                  {theme.palette.mode === "dark" ? (
-                    <DarkMode sx={{ fontSize: "16px" }} />
-                  ) : (
-                    <LightMode sx={{ color: dark, fontSize: "16px" }} />
-                  )}
-                  <Typography ml={"4px"}>Switch modes</Typography>
-                </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </>
-      ) : (
-        <IconButton
-          onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
-        >
-          <Menu />
-        </IconButton>
-      )}
+                <IconButton onClick={() => navigate("/profile/" + user._id)}>
+                  <PersonIcon
+                    sx={{ fontSize: "25px", color: isProfile ? primary : main }}
+                  />
+                </IconButton>
+                <Typography sx={{ color: isProfile ? primary : main }}>
+                  Profile
+                </Typography>
+              </Box>
 
-      {/* MOBILE NAV */}
-      {!isNonMobileScreens && isMobileMenuToggled && (
-        <Box
-          position="fixed"
-          right="0"
-          bottom="0"
-          height="100%"
-          zIndex="10"
-          maxWidth="500px"
-          minWidth="300px"
-          backgroundColor={background}
-        >
-          {/* CLOSE ICON */}
-          <Box display="flex" justifyContent="flex-end" p="1rem">
-            <IconButton
-              onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
-            >
-              <Close />
-            </IconButton>
-          </Box>
-
-          {/* MENU ITEMS */}
-          <FlexBetween
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            gap="3rem"
-          >
-            <IconButton
-              onClick={() => dispatch(setMode())}
-              sx={{ fontSize: "25px" }}
-            >
-              {theme.palette.mode === "dark" ? (
-                <DarkMode sx={{ fontSize: "25px" }} />
-              ) : (
-                <LightMode sx={{ color: dark, fontSize: "25px" }} />
+              {myCommunities && (
+                <>
+                  <Divider orientation="vertical" sx={{ height: "auto" }} />
+                  {renderComminityTags()}
+                  <Divider orientation="vertical" sx={{ height: "auto" }} />
+                </>
               )}
-            </IconButton>
-            <IconButton onClick={() => navigate("/home")}>
-              <Home sx={{ fontSize: "25px" }} />
-            </IconButton>
-            <IconButton onClick={() => navigate("/community")}>
-              <PublicIcon sx={{ fontSize: "25px" }} />
-            </IconButton>
-            <Notifications sx={{ fontSize: "25px" }} />
-            <Help sx={{ fontSize: "25px" }} />
-            <FormControl variant="standard" value={fullName}>
-              <Select
-                value={fullName}
-                sx={{
-                  backgroundColor: neutralLight,
-                  width: "150px",
-                  borderRadius: "0.25rem",
-                  p: "0.25rem 1rem",
-                  "& .MuiSvgIcon-root": {
-                    pr: "0.25rem",
-                    width: "3rem",
-                  },
-                  "& .MuiSelect-select:focus": {
-                    backgroundColor: neutralLight,
-                  },
-                }}
-                input={<InputBase />}
-              >
-                <MenuItem
-                  value={"Switch modes"}
-                  onClick={() => dispatch(setMode())}
+              <Tooltip title={"Discover communities"}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    borderBottom: isCommunity ? `2px solid ${primary}` : "",
+                  }}
                 >
-                  {theme.palette.mode === "dark" ? (
-                    <DarkMode sx={{ fontSize: "16px" }} />
-                  ) : (
-                    <LightMode sx={{ color: dark, fontSize: "16px" }} />
-                  )}
-                  <Typography ml={"4px"}>Switch modes</Typography>
-                </MenuItem>
-                <MenuItem value={fullName}>
-                  <Typography>{fullName}</Typography>
-                </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </FlexBetween>
-        </Box>
-      )}
+                  <IconButton onClick={() => navigate("/community")}>
+                    <PublicIcon
+                      sx={{
+                        fontSize: "25px",
+                        color: isCommunity ? primary : main,
+                      }}
+                    />
+                  </IconButton>
+                  <Typography sx={{ color: isCommunity ? primary : main }}>
+                    Discover
+                  </Typography>
+                </Box>
+              </Tooltip>
+            </Box>
+            <Box display={"flex"} gap={1} alignItems={"center"}>
+              <Searchbar />
+              <FormControl variant="standard" value={fullName}>
+                <Select
+                  value={fullName}
+                  sx={{
+                    backgroundColor: neutralLight,
+                    width: "150px",
+                    borderRadius: "0.25rem",
+                    p: "0.25rem 1rem",
+                    "& .MuiSvgIcon-root": {
+                      pr: "0.25rem",
+                      width: "3rem",
+                    },
+                    "& .MuiSelect-select:focus": {
+                      backgroundColor: neutralLight,
+                    },
+                  }}
+                  input={<InputBase />}
+                >
+                  <MenuItem value={fullName}>
+                    <Typography>{fullName}</Typography>
+                  </MenuItem>
+                  <MenuItem
+                    value={"Switch modes"}
+                    onClick={() => dispatch(setMode())}
+                  >
+                    {theme.palette.mode === "dark" ? (
+                      <DarkMode sx={{ fontSize: "16px" }} />
+                    ) : (
+                      <LightMode sx={{ color: dark, fontSize: "16px" }} />
+                    )}
+                    <Typography ml={"4px"}>Switch modes</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => dispatch(setLogout())}>
+                    Log Out
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </>
+        ) : (
+          <IconButton
+            onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
+          >
+            <Menu />
+          </IconButton>
+        )}
+
+        {/* MOBILE NAV */}
+        {!isNonMobileScreens && isMobileMenuToggled && (
+          <Box
+            position="fixed"
+            right="0"
+            bottom="0"
+            height="100%"
+            zIndex="10"
+            maxWidth="500px"
+            minWidth="300px"
+            backgroundColor={background}
+          >
+            {/* CLOSE ICON */}
+            <Box display="flex" justifyContent="flex-end" p="1rem">
+              <IconButton
+                onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
+              >
+                <Close />
+              </IconButton>
+            </Box>
+
+            {/* MENU ITEMS */}
+            <FlexBetween
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              gap="3rem"
+            >
+              <IconButton
+                onClick={() => dispatch(setMode())}
+                sx={{ fontSize: "25px" }}
+              >
+                {theme.palette.mode === "dark" ? (
+                  <DarkMode sx={{ fontSize: "25px" }} />
+                ) : (
+                  <LightMode sx={{ color: dark, fontSize: "25px" }} />
+                )}
+              </IconButton>
+              <IconButton onClick={() => navigate("/home")}>
+                <Home sx={{ fontSize: "25px" }} />
+              </IconButton>
+              <IconButton onClick={() => navigate("/community")}>
+                <PublicIcon sx={{ fontSize: "25px" }} />
+              </IconButton>
+              <Notifications sx={{ fontSize: "25px" }} />
+              <Help sx={{ fontSize: "25px" }} />
+              <FormControl variant="standard" value={fullName}>
+                <Select
+                  value={fullName}
+                  sx={{
+                    backgroundColor: neutralLight,
+                    width: "150px",
+                    borderRadius: "0.25rem",
+                    p: "0.25rem 1rem",
+                    "& .MuiSvgIcon-root": {
+                      pr: "0.25rem",
+                      width: "3rem",
+                    },
+                    "& .MuiSelect-select:focus": {
+                      backgroundColor: neutralLight,
+                    },
+                  }}
+                  input={<InputBase />}
+                >
+                  <MenuItem
+                    value={"Switch modes"}
+                    onClick={() => dispatch(setMode())}
+                  >
+                    {theme.palette.mode === "dark" ? (
+                      <DarkMode sx={{ fontSize: "16px" }} />
+                    ) : (
+                      <LightMode sx={{ color: dark, fontSize: "16px" }} />
+                    )}
+                    <Typography ml={"4px"}>Switch modes</Typography>
+                  </MenuItem>
+                  <MenuItem value={fullName}>
+                    <Typography>{fullName}</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => dispatch(setLogout())}>
+                    Log Out
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </FlexBetween>
+          </Box>
+        )}
+      </FlexBetween>
       <Messenger />
-    </FlexBetween>
+    </>
   );
 };
 

@@ -103,30 +103,61 @@ const io = new Server(server, { cors: "*" });
 
 // List of connected users
 let users = [];
+let communityUsers = [];
 
 // Event listener for new connection
 io.on("connection", (socket) => {
   console.log(socket.id, "connected");
 
   // Event listener for new user joining
-  socket.on("join", (userId) => {
-    console.log("User joined:", userId);
-    users.push({ id: socket.id, userId: userId });
-    io.emit("getUsers", users);
+  socket.on("join", (data) => {
+    const { userId, chatId } = data;
+    if (chatId) {
+      console.log("User joined community:", userId, chatId);
+      communityUsers.push({
+        id: socket.id,
+        userId,
+        chatId,
+      });
+    } else {
+      console.log("User joined:", userId);
+      users.push({ id: socket.id, userId });
+      io.emit("getUsers", users);
+    }
   });
 
   // Event listener for new message
-  socket.on("sendMessage", ({ senderId, receiverId, text, ...rest }) => {
-    console.log(`Message received from ${senderId} to ${receiverId}: ${text}`);
-    const user = users.find((u) => u.userId === receiverId);
-    if (user) {
-      io.to(user.id).emit("getMessage", {
-        senderId,
-        text,
-        ...rest,
-      });
+  socket.on(
+    "sendMessage",
+    ({ senderId, receiverId, text, chatId, ...rest }) => {
+      if (receiverId) {
+        console.log(
+          `Message received from ${senderId} to ${receiverId}: ${text}`
+        );
+        const user = users.find((u) => u.userId === receiverId);
+        if (user) {
+          io.to(user.id).emit("getMessage", {
+            senderId,
+            text,
+            ...rest,
+          });
+        }
+      } else {
+        const filteredUsers = communityUsers
+          .filter((cu) => {
+            if (cu.userId === senderId) return false;
+            if (cu.chatId !== chatId) return false;
+            return cu;
+          })
+          .map((cu) => cu.id);
+        io.to(filteredUsers).emit("getMessage", {
+          senderId,
+          text,
+          ...rest,
+        });
+      }
     }
-  });
+  );
 
   // Event listener for disconnection
   socket.on("disconnect", () => {
