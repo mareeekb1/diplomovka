@@ -124,6 +124,7 @@ const CommunityContainer = ({ chatId }) => {
           <div ref={scrollRef} />
         </List>
       )}
+      <Divider />
       <Box position="sticky" bottom={0}>
         <ChatContainerInput sendMessage={sendMessage} />
       </Box>

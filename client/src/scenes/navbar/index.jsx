@@ -16,7 +16,6 @@ import {
   Public as PublicIcon,
   DarkMode,
   LightMode,
-  Notifications,
   Help,
   Menu,
   Close,
@@ -32,6 +31,7 @@ import { api } from "api/routes";
 import Icon from "components/Icon";
 import Messenger from "scenes/widgets/messenger/Messenger";
 import Searchbar from "./Searchbar";
+import Notifications from "./Notifications";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -121,7 +121,11 @@ const Navbar = () => {
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        position: "sticky",
+      }}
+    >
       <FlexBetween padding="0.3rem 6%" backgroundColor={alt}>
         <FlexBetween gap="1.75rem">
           <Typography
@@ -215,6 +219,7 @@ const Navbar = () => {
             </Box>
             <Box display={"flex"} gap={1} alignItems={"center"}>
               <Searchbar />
+              <Notifications />
               <FormControl variant="standard" value={fullName}>
                 <Select
                   value={fullName}
@@ -351,7 +356,7 @@ const Navbar = () => {
         )}
       </FlexBetween>
       <Messenger />
-    </>
+    </Box>
   );
 };
 

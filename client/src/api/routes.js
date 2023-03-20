@@ -13,6 +13,8 @@ export const api = {
     addRemoveFriend: (userId, friendId) => `${URL}users/${userId}/${friendId}`,
     editProfile: `${URL}users/edit`,
     getFriends: (id) => `${URL}users/${id}/friends`,
+    handleFriendRequest: `${URL}users/handle-friend-request`,
+    sendFriendRequest: `${URL}users/send-request`,
   },
   posts: {
     patchLike: (id) => `${URL}posts/${id}/like`,

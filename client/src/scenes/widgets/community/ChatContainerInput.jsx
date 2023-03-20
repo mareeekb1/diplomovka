@@ -20,7 +20,6 @@ const ChatContainerInput = ({ sendMessage }) => {
       }}
       sx={{
         position: "sticky",
-        borderTop: "1px solid",
         padding: "4px 4px",
       }}
       InputProps={{

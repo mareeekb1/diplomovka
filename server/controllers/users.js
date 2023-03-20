@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import Community from "../models/Community.js";
+import FriendRequest from "../models/FriendRequest.js";
 import { convertObjectIdToString } from "../utils/utils.js";
 
 /* READ */
@@ -140,6 +141,37 @@ export const editProfile = async (req, res) => {
     await user.save();
 
     res.status(200).json(user);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const friendRequest = async (req, res) => {
+  try {
+    const friendRequest = new FriendRequest(req.body);
+    await friendRequest.save();
+    res.status(201).json();
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const handleFriendRequest = async (req, res) => {
+  const { id, accepted } = req.body;
+  try {
+    let message = "canceled.";
+    const request = await FriendRequest.findById(id);
+    if (accepted) {
+      const user = await User.findById(request.fromUserId);
+      const friend = await User.findById(request.toUserId);
+      user.friends.push(request.toUserId);
+      friend.friends.push(request.fromUserId);
+      await user.save();
+      await friend.save();
+      message = "accepted.";
+    }
+    await request.delete();
+    res.status(204).json({ message: "Request was " + message });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
