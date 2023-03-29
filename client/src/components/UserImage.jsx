@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 
-const UserImage = ({ image, size = "60px" }) => {
+const UserImage = ({ image, size = "60px", userId }) => {
   return (
     <Box
       width={size}

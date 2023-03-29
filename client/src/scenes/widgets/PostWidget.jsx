@@ -9,10 +9,10 @@ import {
 } from "@mui/icons-material";
 import {
   Box,
-  Divider,
   IconButton,
   Menu,
   MenuItem,
+  TextField,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -27,6 +27,11 @@ import {
   LinkedinShareButton,
   TwitterShareButton,
 } from "react-share";
+import { patchRequest } from "api";
+import { api } from "api/routes";
+import UserImage from "components/UserImage";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
 const PostWidget = ({
   postId,
   postUserId,
@@ -42,9 +47,15 @@ const PostWidget = ({
   const dispatch = useDispatch();
   const token = localStorage.getItem("accessToken");
   const loggedInUserId = useSelector((state) => state.user._id);
+  const loggedInUser = useSelector((state) => state.user);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
   const [openMenu, setOpenMenu] = useState(null);
+  const [giveLike, setGivenLike] = useState(isLiked);
+  const [givenLikes, setGivenLikes] = useState(likeCount);
+  const [newComment, setNewComment] = useState("");
+  const [commentsState, setCommentsState] = useState(comments);
+  const navigate = useNavigate();
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -62,6 +73,25 @@ const PostWidget = ({
     });
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
+    if (giveLike) {
+      setGivenLikes(givenLikes - 1);
+    } else {
+      setGivenLikes(givenLikes + 1);
+    }
+    setGivenLike(!giveLike);
+  };
+
+  const patchComment = async () => {
+    const request = await patchRequest(api.posts.patchComment(postId), {
+      firstName: loggedInUser.firstName,
+      lastName: loggedInUser.lastName,
+      userId: loggedInUser._id,
+      comment: newComment,
+      createdOn: moment().format("YYYY-MM-DD HH:mm"),
+    });
+    console.log(request);
+    setCommentsState(comments.concat(request));
+    setNewComment("");
   };
 
   function handleClose() {
@@ -69,6 +99,10 @@ const PostWidget = ({
   }
   function handleClick(event) {
     setOpenMenu(event.currentTarget);
+  }
+  function convertDate(date) {
+    const momentDate = moment(date).format("HH:mm DD.MM.YYYY");
+    return momentDate;
   }
   const urlLink = `http://localhost:3000/profile/${postUserId}`;
   return (
@@ -95,13 +129,13 @@ const PostWidget = ({
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
             <IconButton onClick={patchLike}>
-              {isLiked ? (
+              {giveLike ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
                 <FavoriteBorderOutlined />
               )}
             </IconButton>
-            <Typography>{likeCount}</Typography>
+            <Typography>{givenLikes}</Typography>
           </FlexBetween>
 
           <FlexBetween gap="0.3rem">
@@ -146,16 +180,56 @@ const PostWidget = ({
         </IconButton>
       </FlexBetween>
       {isComments && (
-        <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment}
-              </Typography>
+        <Box gap={1}>
+          <TextField
+            sx={{ mb: 1 }}
+            fullWidth
+            variant="standard"
+            onChange={(e) => setNewComment(e.target.value)}
+            value={newComment}
+            placeholder="Write a comment here"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && e.shiftKey) {
+                return setNewComment(newComment + "\n");
+              }
+              if (e.key === "Enter" && !e.shiftKey) {
+                return patchComment();
+              }
+            }}
+          />
+          {commentsState.map((comment, i) => (
+            <Box
+              key={`${name}-${i}`}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                border: `1px solid ${palette.neutral.light}`,
+                padding: "0.2rem 0.75rem",
+                borderRadius: 2,
+              }}
+            >
+              <FlexBetween>
+                <Box display={"flex"} gap={1}>
+                  <UserImage userId={comment.userId} size="20px" />
+                  <Typography
+                    onClick={() => {
+                      navigate(`/profile/${comment.userId}`);
+                    }}
+                    sx={{
+                      "&:hover": {
+                        color: palette.primary.main,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >{`${comment.firstName} ${comment.lastName}`}</Typography>
+                </Box>
+                <Typography fontSize="12px">
+                  {convertDate(comment.createdOn)}
+                </Typography>
+              </FlexBetween>
+              <Typography sx={{ color: main }}>{comment.comment}</Typography>
             </Box>
           ))}
-          <Divider />
         </Box>
       )}
     </WidgetWrapper>

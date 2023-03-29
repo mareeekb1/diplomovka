@@ -21,6 +21,7 @@ export const api = {
   },
   posts: {
     patchLike: (id) => `${URL}posts/${id}/like`,
+    patchComment: (id) => `${URL}posts/${id}/comment`,
     default: (id) => `${URL}posts/${id}`,
     communityPosts: (id) => `${URL}posts/${id}/comumnityPosts`,
     userPosts: (id) => `${URL}posts/${id}/userPosts`,

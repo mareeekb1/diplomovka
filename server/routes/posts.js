@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  commentPost,
   getCommunityPosts,
   getFeedPosts,
   getUserPosts,
@@ -17,5 +18,6 @@ router.get("/:communityId/comumnityPosts", verifyToken, getCommunityPosts);
 
 /* UPDATE*/
 router.patch("/:id/like", verifyToken, likePost);
+router.patch("/:id/comment", verifyToken, commentPost);
 
 export default router;

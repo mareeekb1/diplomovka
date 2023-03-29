@@ -90,3 +90,15 @@ export const likePost = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+export const commentPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findById(id);
+    post.comments.push(req.body);
+    await post.save();
+
+    res.status(200).json(req.body);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
