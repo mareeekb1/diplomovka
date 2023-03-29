@@ -17,7 +17,10 @@ const CommunityPosts = ({ communityId, community }) => {
       gap="0.5rem"
       justifyContent="space-between"
     >
-      <Box flexBasis={isNonMobileScreens ? "31%" : undefined}>
+      <Box
+        flexBasis={isNonMobileScreens ? "31%" : undefined}
+        className="stickyWidget"
+      >
         <CommunityDetailWidget communityId={communityId} />
         <Participants users={community ? community.users : []} />
         <FriendsSuggestions userId={_id} communityId={community._id} />

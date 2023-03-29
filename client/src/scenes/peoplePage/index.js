@@ -22,7 +22,10 @@ const PeoplePage = () => {
         gap="0.5rem"
         justifyContent="space-between"
       >
-        <Box flexBasis={isNonMobileScreens ? "24%" : undefined}>
+        <Box
+          flexBasis={isNonMobileScreens ? "24%" : undefined}
+          className="stickyWidget"
+        >
           <UserWidget userId={_id} picturePath={picturePath} />
           <CommunityList />
         </Box>
@@ -34,7 +37,7 @@ const PeoplePage = () => {
           <FriendsSuggestions userId={_id} empty />
         </Box>
         {isNonMobileScreens && (
-          <Box flexBasis="24%">
+          <Box flexBasis="24%" className="stickyWidget">
             <AdvertWidget />
           </Box>
         )}

@@ -122,7 +122,7 @@ const Navbar = () => {
   }
 
   return (
-    <Box>
+    <Box className="stickyNavbar">
       <FlexBetween padding="0.3rem 6%" backgroundColor={alt}>
         <FlexBetween gap="1.75rem">
           <Typography

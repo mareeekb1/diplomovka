@@ -38,9 +38,11 @@ const ProfilePage = () => {
         gap="0.5rem"
         justifyContent="center"
       >
-        <Box flexBasis={isNonMobileScreens ? "24%" : undefined}>
+        <Box
+          flexBasis={isNonMobileScreens ? "24%" : undefined}
+          className="stickyWidget"
+        >
           <UserWidget userId={userId} picturePath={user.picturePath} />
-          <Box m={1} />
           <FriendListWidget userId={userId} />
         </Box>
         <Box flexBasis={isNonMobileScreens ? "52%" : undefined}>
@@ -48,7 +50,10 @@ const ProfilePage = () => {
           <Box m={1} />
           <PostsWidget userId={userId} isProfile />
         </Box>
-        <Box flexBasis={isNonMobileScreens ? "24%" : undefined}>
+        <Box
+          flexBasis={isNonMobileScreens ? "24%" : undefined}
+          className="stickyWidget"
+        >
           <AdvertWidget />
           <FriendsSuggestions userId={myId} />
         </Box>

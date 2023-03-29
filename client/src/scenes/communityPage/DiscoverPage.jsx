@@ -23,7 +23,7 @@ function DiscoverPage() {
     <>
       {isNonMobileScreens ? (
         <>
-          <Box flexBasis={"24%"}>
+          <Box flexBasis={"24%"} className="stickyWidget">
             <CreateCommunity />
             <CreateCategory />
           </Box>
@@ -33,7 +33,10 @@ function DiscoverPage() {
           >
             <CommunityDiscover />
           </Box>
-          <Box flexBasis={isNonMobileScreens ? "24%" : undefined}>
+          <Box
+            flexBasis={isNonMobileScreens ? "24%" : undefined}
+            className="stickyWidget"
+          >
             <CommunityList />
           </Box>
         </>

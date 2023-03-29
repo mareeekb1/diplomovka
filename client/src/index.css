@@ -40,3 +40,19 @@ a:-webkit-any-link {
   justify-content: space-between;
   margin: "0 10px";
 }
+
+.stickyWidget {
+  position: sticky;
+  top: 5rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+.stickyNavbar {
+  position: sticky;
+  height: 4rem;
+  top: 0;
+  z-index: 100;
+}
