@@ -8,6 +8,8 @@ import {
   getUserImage,
   friendRequest,
   handleFriendRequest,
+  getFriendRequests,
+  getUserPendingFriendRequests,
 } from "../controllers/users.js";
 
 import { verifyToken } from "../middleware/auth.js";
@@ -19,12 +21,16 @@ router.get("/:id", verifyToken, getUser);
 router.get("/:id/friends", verifyToken, getUserFriends);
 router.get("/:userId/:communityId", verifyToken, getFriendsSuggestion);
 router.get("/:userId/picture", verifyToken, getUserImage);
+router.get("/:id/friend-request/get", verifyToken, getFriendRequests);
+router.get(
+  "/:id/friend-request/pending",
+  verifyToken,
+  getUserPendingFriendRequests
+);
 
 /* UPDATE */
 router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
 router.post("/send-request", friendRequest);
-
-/* DELETE */
-router.delete("/handle-friend-request", handleFriendRequest);
+router.post("/handlefriendrequest", handleFriendRequest);
 
 export default router;

@@ -9,7 +9,7 @@ import FriendListWidget from "scenes/widgets/FriendListWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import UserWidget from "scenes/widgets/UserWidget";
-import FriendsSuggestions from "scenes/widgets/general/FriendsSuggestions";
+import FriendsSuggestions from "scenes/peoplePage/FriendsSuggestions";
 import { useSelector } from "react-redux";
 
 const ProfilePage = () => {

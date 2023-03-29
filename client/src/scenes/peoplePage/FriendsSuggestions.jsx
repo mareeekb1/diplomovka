@@ -7,31 +7,35 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { getRequest, patchRequest } from "api";
+import { getRequest, postRequest } from "api";
 import { api } from "api/routes";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { setFriends } from "state";
+import { useSelector } from "react-redux";
 
-function FriendsSuggestions({ userId, communityId }) {
+function FriendsSuggestions({ userId, communityId, empty }) {
   const { palette } = useTheme();
   const primaryDark = palette.primary.light;
+  const user = useSelector((state) => state.user);
+  const reduxRequests = useSelector((state) => state.friendRequests);
 
   const [suggestions, setSuggestions] = useState([]);
   const [added, setAdded] = useState([]);
-  const dispatch = useDispatch;
 
-  async function addFriend(friendId) {
+  async function addFriend(friendId, friendFirstName, friendLastName) {
     try {
-      const response = await patchRequest(
-        api.users.addRemoveFriend(userId, friendId)
-      );
-      if (response) {
-        setAdded(response.map((item) => item._id));
-        dispatch(setFriends(response));
+      const request = await postRequest(api.users.sendFriendRequest, {
+        fromUserId: user._id,
+        fromUserFirstName: user.firstName,
+        fromUserLastName: user.lastName,
+        toUserId: friendId,
+        toUserFirstName: friendFirstName,
+        toUserLastName: friendLastName,
+      });
+      if (request) {
+        setAdded([...added, request.toUserId]);
       }
     } catch (err) {
       console.log(err);
@@ -45,13 +49,31 @@ function FriendsSuggestions({ userId, communityId }) {
       );
       if (request) setSuggestions(request);
     }
+    async function getFriendRequests() {
+      const request = await getRequest(
+        api.users.getPendingFriendRequests(userId)
+      );
+      if (request) setAdded(request.map((item) => item.toUserId));
+    }
+    getFriendRequests();
     getUserFriends();
-  }, [communityId, userId]);
-
+  }, [communityId, userId, reduxRequests]);
   function filterSuggestionsByAdded() {
-    return suggestions.filter((item) => !added.includes(item._id)).slice(0, 3);
+    let array = suggestions;
+    array = array.filter((arr) =>
+      reduxRequests.find((req) => req.fromUserId !== arr._id)
+    );
+    return array.filter((item) => !added.includes(item._id)).slice(0, 3);
   }
+
   if (filterSuggestionsByAdded().length === 0) {
+    if (empty)
+      return (
+        <WidgetWrapper overflow="auto">
+          <Typography variant="h4">Friends suggestions</Typography>
+          <Typography variant="subtitle1">No friend suggesstions</Typography>
+        </WidgetWrapper>
+      );
     return <div />;
   }
   return (
@@ -98,7 +120,11 @@ function FriendsSuggestions({ userId, communityId }) {
                     </Box>
                   </Box>
                 </FlexBetween>
-                <IconButton onClick={() => addFriend(_id)} sx={{}} size="small">
+                <IconButton
+                  onClick={() => addFriend(_id, firstName, lastName)}
+                  sx={{}}
+                  size="small"
+                >
                   <PersonAddOutlined sx={{ color: primaryDark }} size="small" />
                 </IconButton>
               </Box>

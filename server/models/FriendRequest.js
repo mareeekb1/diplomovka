@@ -3,9 +3,11 @@ import mongoose from "mongoose";
 const FriendRequestSchema = mongoose.Schema(
   {
     fromUserId: String,
-    fromUserName: String,
+    fromUserFirstName: String,
     fromUserLastName: String,
     toUserId: String,
+    toUserFirstName: String,
+    toUserLastName: String,
   },
   { timestamps: true }
 );

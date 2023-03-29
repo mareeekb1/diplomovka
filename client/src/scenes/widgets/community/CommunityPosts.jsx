@@ -1,7 +1,7 @@
 import { Box, useMediaQuery } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
-import FriendsSuggestions from "../general/FriendsSuggestions";
+import FriendsSuggestions from "../../peoplePage/FriendsSuggestions";
 import MyPostWidget from "../MyPostWidget";
 import PostsWidget from "../PostsWidget";
 import CommunityDetailWidget from "./CommunityDetailWidget";

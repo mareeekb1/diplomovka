@@ -9,6 +9,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import PageNotFound from "scenes/notFoundPage";
+import PeoplePage from "scenes/peoplePage";
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -40,6 +41,10 @@ function App() {
             <Route
               path="/community/:communityId"
               element={isAuth ? <CommunityPage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/people/"
+              element={isAuth ? <PeoplePage /> : <Navigate to="/" />}
             />
             <Route path="*" element={<PageNotFound />} />
           </Routes>

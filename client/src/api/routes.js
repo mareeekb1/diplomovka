@@ -13,7 +13,10 @@ export const api = {
     addRemoveFriend: (userId, friendId) => `${URL}users/${userId}/${friendId}`,
     editProfile: `${URL}users/edit`,
     getFriends: (id) => `${URL}users/${id}/friends`,
-    handleFriendRequest: `${URL}users/handle-friend-request`,
+    getFriendRequests: (id) => `${URL}users/${id}/friend-request/get`,
+    getPendingFriendRequests: (id) =>
+      `${URL}users/${id}/friend-request/pending`,
+    handleFriendRequest: `${URL}users/handlefriendrequest`,
     sendFriendRequest: `${URL}users/send-request`,
   },
   posts: {

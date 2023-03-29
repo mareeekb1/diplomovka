@@ -90,6 +90,26 @@ export const getUserImage = async (req, res) => {
   }
 };
 
+export const getFriendRequests = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const request = await FriendRequest.find({ toUserId: id });
+    res.status(200).json(request);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const getUserPendingFriendRequests = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const request = await FriendRequest.find({ fromUserId: id });
+    res.status(200).json(request);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
 /* UPDATE */
 
 export const addRemoveFriend = async (req, res) => {
@@ -157,6 +177,7 @@ export const friendRequest = async (req, res) => {
 };
 
 export const handleFriendRequest = async (req, res) => {
+  console.log(req.body);
   const { id, accepted } = req.body;
   try {
     let message = "canceled.";
@@ -170,7 +191,7 @@ export const handleFriendRequest = async (req, res) => {
       await friend.save();
       message = "accepted.";
     }
-    await request.delete();
+    await FriendRequest.findByIdAndDelete(id);
     res.status(204).json({ message: "Request was " + message });
   } catch (err) {
     res.status(404).json({ message: err.message });

@@ -8,6 +8,7 @@ const initialState = {
   myCommunities: [],
   allCommunities: [],
   categories: [],
+  friendRequests: [],
 };
 
 export const authSlice = createSlice({
@@ -102,6 +103,10 @@ export const authSlice = createSlice({
         state.user.conversations[index].messages.unshift(message);
       }
     },
+    // FRIEND REQUESTS
+    setFriendRequests: (state, action) => {
+      state.friendRequests = action.payload;
+    },
   },
 });
 export const {
@@ -122,5 +127,6 @@ export const {
   setConversations,
   setSingleConversation,
   addMessage,
+  setFriendRequests,
 } = authSlice.actions;
 export default authSlice.reducer;
