@@ -14,12 +14,14 @@ import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function FriendsSuggestions({ userId, communityId, empty }) {
   const { palette } = useTheme();
   const primaryDark = palette.primary.light;
   const user = useSelector((state) => state.user);
   const reduxRequests = useSelector((state) => state.friendRequests);
+  const navigate = useNavigate();
 
   const [suggestions, setSuggestions] = useState([]);
   const [added, setAdded] = useState([]);
@@ -108,6 +110,7 @@ function FriendsSuggestions({ userId, communityId, empty }) {
                       )}
                     </Box>
                     <Box
+                      onClick={() => navigate("/profile/" + _id)}
                       sx={{
                         "&:hover": {
                           color: palette.primary.main,

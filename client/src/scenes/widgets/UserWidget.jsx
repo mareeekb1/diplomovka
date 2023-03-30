@@ -3,32 +3,39 @@ import {
   // EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
+  PersonOff,
+  PersonAdd,
+  PeopleAlt,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
+import { Box, Typography, Divider, useTheme, IconButton } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getRequest } from "api";
+import { getRequest, patchRequest, postRequest } from "api";
 import { api } from "api/routes";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import EditProfile from "scenes/profilePage/EditProfile";
+import { setFriends } from "state";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
-  const userRedux = useSelector(state => state.user)
-  const isMyProfile = userId === userRedux._id
+  const userRedux = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const isMyProfile = userId === userRedux._id;
   const { palette } = useTheme();
   const navigate = useNavigate();
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
-  const [editProfile, setEditProfile] = useState(false)
+  const [editProfile, setEditProfile] = useState(false);
+  const isFriend = userRedux.friends.includes(userId);
+  const [sent, setSent] = useState(false);
 
   useEffect(() => {
     if (isMyProfile) {
-      setUser(userRedux)
+      setUser(userRedux);
     }
     const getUser = async () => {
       const response = await getRequest(api.users.getUserById(userId));
@@ -41,6 +48,27 @@ const UserWidget = ({ userId, picturePath }) => {
     return null;
   }
 
+  const removeFriend = async () => {
+    const request = await patchRequest(
+      api.users.addRemoveFriend(userRedux._id, userId)
+    );
+    dispatch(setFriends(request));
+  };
+  async function addFriend() {
+    try {
+      await postRequest(api.users.sendFriendRequest, {
+        fromUserId: userRedux._id,
+        fromUserFirstName: userRedux.firstName,
+        fromUserLastName: userRedux.lastName,
+        toUserId: user._id,
+        toUserFirstName: user.firstName,
+        toUserLastName: user.lastName,
+      });
+      setSent(true);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const {
     firstName,
@@ -50,15 +78,14 @@ const UserWidget = ({ userId, picturePath }) => {
     // friends,
   } = user;
 
-
   return (
     <WidgetWrapper>
-      <EditProfile open={editProfile} handleClose={() => setEditProfile(false)} />
+      <EditProfile
+        open={editProfile}
+        handleClose={() => setEditProfile(false)}
+      />
       {/* FIRST ROW */}
-      <FlexBetween
-        gap="0.5rem"
-        pb="1.1rem"
-      >
+      <FlexBetween gap="0.5rem" pb="1.1rem">
         <FlexBetween gap="1rem">
           <UserImage image={picturePath} userId={userId} />
           <Typography
@@ -76,16 +103,29 @@ const UserWidget = ({ userId, picturePath }) => {
             {firstName} {lastName}
           </Typography>
         </FlexBetween>
-        {isMyProfile &&
-          <ManageAccountsOutlined sx={{
-            '&:hover': {
-              cursor: 'pointer',
-              color: medium
-            }
-          }}
+        {isMyProfile ? (
+          <ManageAccountsOutlined
+            sx={{
+              "&:hover": {
+                cursor: "pointer",
+                color: medium,
+              },
+            }}
             onClick={() => setEditProfile(true)}
           />
-        }
+        ) : isFriend ? (
+          <IconButton onClick={removeFriend}>
+            <PersonOff />
+          </IconButton>
+        ) : !sent ? (
+          <IconButton onClick={addFriend}>
+            <PersonAdd />
+          </IconButton>
+        ) : (
+          <IconButton disabled>
+            <PeopleAlt />
+          </IconButton>
+        )}
       </FlexBetween>
 
       <Divider />
