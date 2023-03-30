@@ -46,7 +46,7 @@ const Notifications = () => {
     console.log(action, type);
     await patchRequest(api.notification.seen(id));
     navigate(`/${type}/${action}`);
-    setNotifications((prev) => prev.filter((item) => item._id !== id));
+    setNotifications((prev) => prev.map((item) => ({ ...item, seen: true })));
   };
 
   return (

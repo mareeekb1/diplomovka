@@ -118,10 +118,23 @@ export const likePost = async (req, res) => {
 export const commentPost = async (req, res) => {
   try {
     const { id } = req.params;
+    const { userId } = req.body;
     const post = await Post.findById(id);
     post.comments.push(req.body);
-    console.log(post);
     await post.save();
+    if (userId !== post.userId) {
+      const sender = await User.findById(userId);
+      const notification = new Notification({
+        type: "post",
+        text: "commented on your post.",
+        senderId: userId,
+        senderName: sender.firstName,
+        senderLastName: sender.lastName,
+        receiverId: post.userId,
+        action: post._id,
+      });
+      await notification.save();
+    }
 
     res.status(200).json(req.body);
   } catch (err) {
