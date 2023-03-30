@@ -58,7 +58,7 @@ const FriendItem = ({
     );
   return (
     <Box sx={{ display: "flex", mb: 1, gap: 1, alignItems: "center" }}>
-      <UserImage image={user.picturePath} />
+      <UserImage userId={user._id} />
       <Box
         sx={{
           display: "flex",

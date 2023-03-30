@@ -89,7 +89,6 @@ const PostWidget = ({
       comment: newComment,
       createdOn: moment().format("YYYY-MM-DD HH:mm"),
     });
-    console.log(request);
     setCommentsState(comments.concat(request));
     setNewComment("");
   };

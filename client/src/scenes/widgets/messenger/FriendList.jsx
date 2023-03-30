@@ -58,7 +58,7 @@ const FriendList = ({ openConversation, conversations }) => {
             },
           }}
         >
-          <UserImage image={item.picturePath} size="16px" />
+          <UserImage image={item.picturePath} size="16px" userId={item._id} />
           <Typography
             fontSize={"16px"}
           >{`${item.firstName} ${item.lastName}`}</Typography>
