@@ -25,6 +25,7 @@ export const api = {
     default: (id) => `${URL}posts/${id}`,
     communityPosts: (id) => `${URL}posts/${id}/comumnityPosts`,
     userPosts: (id) => `${URL}posts/${id}/userPosts`,
+    getSinglePost: (id) => `${URL}posts/${id}/singlePost`,
   },
   community: {
     default: URL + "community",
@@ -55,5 +56,9 @@ export const api = {
     },
     send: URL + "message/send",
     read: URL + "message/read",
+  },
+  notification: {
+    get: (id) => URL + "notification/" + id,
+    seen: (id) => URL + "notification/" + id + "/seen",
   },
 };

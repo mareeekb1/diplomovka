@@ -21,6 +21,7 @@ import categoryRoutes from "./routes/category.js";
 import messageRoutes from "./routes/message.js";
 import generalRoutes from "./routes/general.js";
 import conversationRoutes from "./routes/conversation.js";
+import notificationRoutes from "./routes/notifications.js";
 //-----------------------------
 import { createPost } from "./controllers/posts.js";
 import { register } from "./controllers/auth.js";
@@ -82,6 +83,7 @@ app.use("/category", categoryRoutes);
 app.use("/message", messageRoutes);
 app.use("/general", generalRoutes);
 app.use("/conversation", conversationRoutes);
+app.use("/notification", notificationRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 3001;
