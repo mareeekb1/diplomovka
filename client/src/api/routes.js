@@ -10,7 +10,8 @@ export const api = {
     getUserImage: (id) => `${URL}users/${id}/picture`,
     getFriendsSuggestions: (userId, communityId) =>
       `${URL}users/${userId}/${communityId}`,
-    addRemoveFriend: (userId, friendId) => `${URL}users/${userId}/${friendId}`,
+    addRemoveFriend: (userId, friendId) =>
+      `${URL}users/${userId}/${friendId}/add-remove`,
     editProfile: `${URL}users/edit`,
     getFriends: (id) => `${URL}users/${id}/friends`,
     getFriendRequests: (id) => `${URL}users/${id}/friend-request/get`,

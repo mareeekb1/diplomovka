@@ -125,6 +125,7 @@ export const addRemoveFriend = async (req, res) => {
       user.friends.push(friendId);
       friend.friends.push(id);
     }
+    console.log(user);
     await user.save();
     await friend.save();
 
@@ -177,7 +178,6 @@ export const friendRequest = async (req, res) => {
 };
 
 export const handleFriendRequest = async (req, res) => {
-  console.log(req.body);
   const { id, accepted } = req.body;
   try {
     let message = "canceled.";
@@ -185,8 +185,9 @@ export const handleFriendRequest = async (req, res) => {
     if (accepted) {
       const user = await User.findById(request.fromUserId);
       const friend = await User.findById(request.toUserId);
-      user.friends.push(request.toUserId);
-      friend.friends.push(request.fromUserId);
+      console.log(user, friend);
+      user.friends.push(friend._id.toString());
+      friend.friends.push(user._id.toString());
       await user.save();
       await friend.save();
       message = "accepted.";

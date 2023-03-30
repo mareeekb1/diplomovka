@@ -29,7 +29,7 @@ router.get(
 );
 
 /* UPDATE */
-router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
+router.patch("/:id/:friendId/add-remove", verifyToken, addRemoveFriend);
 router.post("/send-request", friendRequest);
 router.post("/handlefriendrequest", handleFriendRequest);
 

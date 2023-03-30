@@ -58,11 +58,14 @@ function FriendsSuggestions({ userId, communityId, empty }) {
     getFriendRequests();
     getUserFriends();
   }, [communityId, userId, reduxRequests]);
+
   function filterSuggestionsByAdded() {
     let array = suggestions;
-    array = array.filter((arr) =>
-      reduxRequests.find((req) => req.fromUserId !== arr._id)
-    );
+    if (reduxRequests) {
+      array = array.filter(
+        (arr) => !reduxRequests.find((req) => req.fromUserId !== arr._id)
+      );
+    }
     return array.filter((item) => !added.includes(item._id)).slice(0, 3);
   }
 

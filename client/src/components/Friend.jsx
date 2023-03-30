@@ -1,17 +1,26 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { PersonAdd, PersonOff } from "@mui/icons-material";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
+
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
-const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
+const Friend = ({
+  friendId,
+  name,
+  subtitle,
+  userPicturePath,
+  addRemoveFriends,
+}) => {
   const navigate = useNavigate();
-  const { _id } = useSelector((state) => state.user);
+  const { _id, ...user } = useSelector((state) => state.user);
 
   const { palette } = useTheme();
 
   const isNotMe = _id !== friendId;
   const specificId = isNotMe ? friendId : _id;
+  const isFriend = user.friends.includes(friendId);
 
   return (
     <FlexBetween>
@@ -38,6 +47,11 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
           <Typography fontSize="0.75rem">{subtitle}</Typography>
         </Box>
       </FlexBetween>
+      {isNotMe && (
+        <IconButton onClick={addRemoveFriends}>
+          {!isFriend ? <PersonOff /> : <PersonAdd />}
+        </IconButton>
+      )}
     </FlexBetween>
   );
 };
