@@ -54,7 +54,7 @@ const ConversationChat = ({
     socket.on("getMessage", (mess) => {
       setMessages((prevMessages) => [
         ...prevMessages,
-        { ...mess, isNew: true },
+        { ...mess, newMessage: true },
       ]);
       if (openedRef.current && open) {
         openedRef.current.scrollIntoView();
@@ -96,7 +96,7 @@ const ConversationChat = ({
     setOpenedRef({ current: null, ...openedRef });
   }
   async function seeNewMessage() {
-    setMessages(messages.map(({ isNew, ...rest }) => rest));
+    setMessages(messages.map(({ newMessage, ...rest }) => rest));
     await postRequest(api.messages.read, { id: _id });
   }
 
@@ -107,7 +107,7 @@ const ConversationChat = ({
       senderId: user._id,
       senderName: user.firstName,
       senderLastName: user.lastName,
-      isNew: true,
+      newMessage: true,
     });
     if (request) {
       socket.emit("sendMessage", {
@@ -115,7 +115,7 @@ const ConversationChat = ({
         receiverId: friendReceiver._id,
         ...request,
       });
-      setMessages([...messages, { ...request, isNew: false }]);
+      setMessages([...messages, { ...request, newMessage: false }]);
       if (Boolean(openedRef.current) && open) {
         openedRef.current.scrollIntoView();
       }
@@ -144,7 +144,7 @@ const ConversationChat = ({
     };
   }, [limit]);
 
-  const newMessages = messages.filter((item) => item.isNew).length;
+  const newMessages = messages.filter((item) => item.newMessage).length;
   const isNewMessage = newMessages > 0;
   return (
     <Box

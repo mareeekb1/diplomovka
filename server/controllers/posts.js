@@ -95,6 +95,7 @@ export const commentPost = async (req, res) => {
     const { id } = req.params;
     const post = await Post.findById(id);
     post.comments.push(req.body);
+    console.log(post);
     await post.save();
 
     res.status(200).json(req.body);

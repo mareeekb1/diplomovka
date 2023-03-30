@@ -26,7 +26,9 @@ const FriendList = ({ openConversation, conversations }) => {
         conversation.members.length === 2 &&
         conversation.members.includes(friendId)
       ) {
-        item = conversation.messages.filter((message) => message.isNew).length;
+        item = conversation.messages.filter(
+          (message) => message.newMessage
+        ).length;
       }
     });
     if (item === 0) return null;

@@ -88,7 +88,7 @@ const Messenger = () => {
       updateConversation(
         conversation._id,
         "messages",
-        conversation.messages.map((item) => ({ ...item, isNew: false }))
+        conversation.messages.map((item) => ({ ...item, newMessage: false }))
       );
       updateConversation(conversation._id, "open", true);
       updateConversation(conversation._id, "toggled", true);

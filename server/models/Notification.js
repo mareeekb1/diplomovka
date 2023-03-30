@@ -6,7 +6,7 @@ const NotificationSchema = mongoose.Schema(
     senderId: String,
     senderName: String,
     senderLastName: String,
-    isNew: Boolean,
+    newMessage: Boolean,
     type: "message" | "post" | "community" | "friend",
   },
   { timestamps: true }

@@ -36,7 +36,7 @@ const CommunityContainer = ({ chatId }) => {
     socket.on("getMessage", (mess) => {
       setMessages((prevMessages) => [
         ...prevMessages,
-        { ...mess, isNew: true },
+        { ...mess, newMessage: true },
       ]);
       if (scrollRef.current) {
         scrollRef.current.scrollIntoView();
@@ -71,7 +71,7 @@ const CommunityContainer = ({ chatId }) => {
       senderId: user._id,
       senderName: user.firstName,
       senderLastName: user.lastName,
-      isNew: true,
+      newMessage: true,
     });
     if (request) {
       socket.emit("sendMessage", {
@@ -79,7 +79,7 @@ const CommunityContainer = ({ chatId }) => {
         chatId: chatId,
         ...request,
       });
-      setMessages([...messages, { ...request, isNew: false }]);
+      setMessages([...messages, { ...request, newMessage: false }]);
     }
   }
 

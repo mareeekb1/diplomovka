@@ -7,7 +7,7 @@ const MessageSchema = mongoose.Schema(
     senderId: String,
     senderName: String,
     senderLastName: String,
-    isNew: Boolean,
+    newMessage: Boolean,
   },
   { timestamps: true }
 );

@@ -10,10 +10,18 @@ const UserImage = ({ image, size = "60px", userId }) => {
   useEffect(() => {
     async function getUser() {
       const request = await getRequest(api.users.getUserById(userId));
-      if (request) setImgPath(request.picturePath);
+      if (request) {
+        localStorage.setItem(userId, request.picturePath);
+        setImgPath(request.picturePath);
+      }
     }
+    const localStorageImage = localStorage.getItem(userId);
     if (userId) {
-      getUser();
+      if (!localStorageImage) {
+        getUser();
+      } else {
+        setImgPath(localStorageImage);
+      }
     } else {
       setImgPath(image);
     }

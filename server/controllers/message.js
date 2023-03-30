@@ -41,7 +41,7 @@ export const readMessages = async (req, res) => {
     const conversation = await Conversation.findById(id);
     conversation.messages = conversation.messages.map((item) => ({
       ...item,
-      isNew: false,
+      newMessage: false,
     }));
     await conversation.save();
     res.status(201).json(conversation.messages);
