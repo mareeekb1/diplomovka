@@ -11,7 +11,6 @@ const FriendListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const friends = useSelector((state) => state.user.friends);
-  console.log(friends);
 
   useEffect(() => {
     const getFriends = async () => {

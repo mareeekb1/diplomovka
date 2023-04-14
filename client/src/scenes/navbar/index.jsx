@@ -70,7 +70,7 @@ const Navbar = () => {
     let newName = name;
     if (name.length > 10) newName = shortenName(name);
     return (
-      <Tooltip title={fullItemName}>
+      <Tooltip title={fullItemName} aria-label="button">
         <Box
           sx={{
             display: "flex",
@@ -80,7 +80,10 @@ const Navbar = () => {
             borderBottom: isInParams ? `2px solid ${primary}` : "",
           }}
         >
-          <IconButton onClick={() => navigate(link)}>
+          <IconButton
+            onClick={() => navigate(link)}
+            className="navigationBadge"
+          >
             <Icon name={icon} sx={{ fontSize: "25px", color: color }} />
           </IconButton>
           <Typography sx={{ color: color }}>{newName}</Typography>

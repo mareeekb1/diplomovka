@@ -43,7 +43,6 @@ const Notifications = () => {
     setAnchorEl(event.currentTarget);
   };
   const navigateTo = (action, type, id) => async () => {
-    console.log(action, type);
     await patchRequest(api.notification.seen(id));
     navigate(`/${type}/${action}`);
     setNotifications((prev) => prev.map((item) => ({ ...item, seen: true })));
